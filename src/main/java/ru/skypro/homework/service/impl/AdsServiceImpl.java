@@ -1,11 +1,13 @@
 package ru.skypro.homework.service.impl;
 
+import org.springframework.stereotype.Service;
 import ru.skypro.homework.entities.Ads;
 import ru.skypro.homework.service.AdsService;
 
 import java.util.ArrayList;
 import java.util.Collection;
 
+@Service
 public class AdsServiceImpl implements AdsService {
     @Override
     public Collection<Ads> findAll() {
