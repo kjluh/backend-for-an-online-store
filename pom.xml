@@ -10,7 +10,7 @@
     <relativePath/> <!-- lookup parent from repository -->
   </parent>
   <groupId>ru.skypro</groupId>
-  <artifactId>GraduateWork</artifactId>
+  <artifactId>ads</artifactId>
   <version>0.0.1-SNAPSHOT</version>
   <name>Ads application</name>
   <description>Application for managing ads</description>
@@ -52,6 +52,14 @@
       <artifactId>spring-security-test</artifactId>
       <scope>test</scope>
     </dependency>
+    <!-- https://mvnrepository.com/artifact/io.springfox/springfox-swagger-ui -->
+    <dependency>
+      <groupId>io.springfox</groupId>
+      <artifactId>springfox-swagger-ui</artifactId>
+      <version>3.0.0</version>
+    </dependency>
+
+
   </dependencies>
 
   <build>
