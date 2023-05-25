@@ -2,7 +2,6 @@ package ru.skypro.homework.service.impl;
 
 import org.springframework.stereotype.Service;
 import ru.skypro.homework.dto.InfoForAds;
-import ru.skypro.homework.entities.Ads;
 import ru.skypro.homework.repositories.InfoForAdsRepository;
 import ru.skypro.homework.service.AdsService;
 
