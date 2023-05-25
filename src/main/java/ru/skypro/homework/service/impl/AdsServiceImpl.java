@@ -1,7 +1,9 @@
 package ru.skypro.homework.service.impl;
 
 import org.springframework.stereotype.Service;
+import ru.skypro.homework.dto.InfoForAds;
 import ru.skypro.homework.entities.Ads;
+import ru.skypro.homework.repositories.InfoForAdsRepository;
 import ru.skypro.homework.service.AdsService;
 
 import java.util.ArrayList;
@@ -9,27 +11,37 @@ import java.util.Collection;
 
 @Service
 public class AdsServiceImpl implements AdsService {
-    @Override
-    public Collection<Ads> findAll() {
-        Collection<Ads> collection = new ArrayList<>();
-        collection.add(new Ads("1"));
-        collection.add(new Ads("2"));
-        collection.add(new Ads("3"));
-        return collection;
+
+    private InfoForAdsRepository infoForAdsRepository;
+
+    public AdsServiceImpl(InfoForAdsRepository infoForAdsRepository) {
+        this.infoForAdsRepository = infoForAdsRepository;
     }
 
     @Override
-    public Ads save(String name) {
-        return new Ads(name);
+    public Collection<InfoForAds> findAll() {
+        return infoForAdsRepository.findAll();
     }
 
     @Override
-    public Ads findById(Long id) {
-        return new Ads("1");
+    public InfoForAds save(String name) {
+        return null;
     }
 
     @Override
-    public Ads delete(Long id) {
-        return new Ads("1");
+    public InfoForAds findById(Long id) {
+        return null;
     }
+
+    @Override
+    public InfoForAds findByName(String name) {
+        return null;
+    }
+
+    @Override
+    public InfoForAds delete(Long id) {
+        return null;
+    }
+
+
 }

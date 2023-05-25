@@ -1,9 +1,12 @@
 package ru.skypro.homework.controller;
 
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import ru.skypro.homework.entities.Ads;
+import org.springframework.web.multipart.MultipartFile;
+import ru.skypro.homework.dto.InfoForAds;
+import ru.skypro.homework.dto.RegisterReq;
 import ru.skypro.homework.service.AdsService;
 
 import java.util.Collection;
@@ -16,17 +19,17 @@ public class AdsController {
     private final AdsService adsService;
 
     @GetMapping
-    public ResponseEntity<Collection<Ads>> getAllAds() {
+    public ResponseEntity<Collection<InfoForAds>> getAllAds() {
         return ResponseEntity.ok(adsService.findAll());
     }
 
     @PostMapping
-    public ResponseEntity<Ads> saveNewAds(@RequestParam String name) {
+    public ResponseEntity<InfoForAds> saveNewAds(@RequestParam String name) {
         return ResponseEntity.ok(adsService.save(name));
     }
 
     @GetMapping("{id}")
-    public ResponseEntity<Ads> findAdsById(@PathVariable Long id) {
+    public ResponseEntity<InfoForAds> findAdsById(@PathVariable Long id) {
         return ResponseEntity.ok(adsService.findById(id));
     }
 
@@ -35,4 +38,24 @@ public class AdsController {
         adsService.delete(id);
         return ResponseEntity.ok().build();
     }
+
+    @PutMapping("{id}")
+    public ResponseEntity<InfoForAds> updateAds(@RequestBody InfoForAds ads){
+        adsService.save(ads.getUser().getFirstName());
+        return ResponseEntity.ok(ads);
+    }
+
+    @GetMapping("find_by_name")
+    public ResponseEntity<Collection<InfoForAds>> getInfoForAds(@RequestParam String name){
+        InfoForAds infoForAds = adsService.findByName(name);
+        RegisterReq req = infoForAds.getUser();
+        Collection<InfoForAds> infoForAdsCollection = req.getInfoForAds();
+        return ResponseEntity.ok(infoForAdsCollection);
+    }
+
+    @PostMapping(value = "ava/{id}",  consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+    public void setAvatar(@PathVariable Long id, @RequestParam MultipartFile avatar){
+
+    }
+
 }
