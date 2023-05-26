@@ -1,5 +1,6 @@
-package ru.skypro.homework.dto;
+package ru.skypro.homework.entities;
 import lombok.Data;
+
 import javax.persistence.*;
 
 /**
@@ -23,7 +24,7 @@ public class InfoForAds {
      */
     @ManyToOne
     @JoinColumn(name = "user_id")
-    private RegisterReq user;
+    private User user;
     /**
      * Аватарка объявления
      */

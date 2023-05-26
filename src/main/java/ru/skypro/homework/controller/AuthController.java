@@ -1,4 +1,5 @@
 package ru.skypro.homework.controller;
+
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
@@ -11,6 +12,7 @@ import ru.skypro.homework.dto.LoginReq;
 import ru.skypro.homework.dto.RegisterReq;
 import ru.skypro.homework.dto.Role;
 import ru.skypro.homework.service.AuthService;
+
 import static ru.skypro.homework.dto.Role.USER;
 
 @Slf4j

@@ -4,7 +4,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import ru.skypro.homework.service.UserService;
-import ru.skypro.homework.dto.User;
+import ru.skypro.homework.entities.User;
 
 import java.util.Collection;
 

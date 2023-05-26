@@ -1,16 +1,13 @@
-package ru.skypro.homework.dto;
+package ru.skypro.homework.entities;
 
 import lombok.Data;
 
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.Id;
-import javax.persistence.Lob;
+import javax.persistence.*;
+import java.util.Collection;
 
 /**
  * Аватарка объявления
  */
-
 @Entity
 @Data
 public class User {
@@ -45,8 +42,14 @@ public class User {
     /**
      * Аватарка пользователя в массиве байт
      */
-    @Lob
-    private byte[] avatar;
+    @OneToOne
+    private AvatarUser avatarReq;
+
+    /**
+     * Объявления пользователя
+     */
+    @OneToMany()
+    private Collection<InfoForAds> infoForAds;
 
 
 }

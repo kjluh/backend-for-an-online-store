@@ -1,17 +1,18 @@
-package ru.skypro.homework.dto;
+package ru.skypro.homework.entities;
 
 import lombok.Data;
+import ru.skypro.homework.entities.User;
 
 import javax.persistence.*;
 
 /**
- * Аватарка объявления
+ * Аватарка пользователя
  */
 @Entity
 @Data
-public class AvatarAds {
+public class AvatarUser {
     /**
-     * ID аватарки объявления
+     * ID аватарки
      */
     @Id
     @GeneratedValue
@@ -37,5 +38,5 @@ public class AvatarAds {
      * Объявление к которому аватарка относится
      */
     @OneToOne
-    private InfoForAds ads;
+    private User user;
 }

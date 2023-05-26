@@ -2,7 +2,7 @@ package ru.skypro.homework.service.impl;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
-import ru.skypro.homework.dto.CommentsForAds;
+import ru.skypro.homework.entities.CommentsForAds;
 import ru.skypro.homework.repositories.CommentsForAdsRepository;
 import ru.skypro.homework.service.CommentsForAdsService;
 @Service

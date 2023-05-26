@@ -1,7 +1,6 @@
 package ru.skypro.homework.service;
 
-import ru.skypro.homework.dto.InfoForAds;
-import ru.skypro.homework.dto.User;
+import ru.skypro.homework.entities.User;
 
 import java.util.Collection;
 

@@ -1,5 +1,7 @@
-package ru.skypro.homework.dto;
+package ru.skypro.homework.entities;
 import lombok.Data;
+import ru.skypro.homework.entities.InfoForAds;
+
 import javax.persistence.*;
 
 /**

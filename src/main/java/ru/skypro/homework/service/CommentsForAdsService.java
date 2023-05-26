@@ -1,7 +1,6 @@
 package ru.skypro.homework.service;
 
-import org.springframework.stereotype.Service;
-import ru.skypro.homework.dto.CommentsForAds;
+import ru.skypro.homework.entities.CommentsForAds;
 
 
 public interface CommentsForAdsService {
