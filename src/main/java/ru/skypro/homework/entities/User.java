@@ -20,9 +20,9 @@ public class User {
     private Long id;
 
     /**
-     * Логин пользователя
+     * Логин (почта) пользователя
      */
-    private String username;
+    private String email;
 
     /**
      * Пароль пользователя
@@ -32,12 +32,17 @@ public class User {
     /**
      * Имя пользователя
      */
-    private String name;
+    private String firstName;
 
     /**
-     * Возраст
+     * Фамилия пользователя
      */
-    private int age;
+    private String lastName;
+
+    /**
+     * Телефон
+     */
+    private int phone;
 
     /**
      * Аватарка пользователя в массиве байт
@@ -51,5 +56,15 @@ public class User {
     @OneToMany()
     private Collection<InfoForAds> infoForAds;
 
-
+    @Override
+    public String toString() {
+        return "User{" +
+                "id=" + id +
+                ", email='" + email + '\'' +
+                ", firstName='" + firstName + '\'' +
+                ", lastName='" + lastName + '\'' +
+                ", phone=" + phone +
+                ", avatarReq=" + avatarReq +
+                '}';
+    }
 }

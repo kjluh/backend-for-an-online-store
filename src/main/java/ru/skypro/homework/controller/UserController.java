@@ -3,6 +3,7 @@ package ru.skypro.homework.controller;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import ru.skypro.homework.entities.AvatarUser;
 import ru.skypro.homework.service.UserService;
 import ru.skypro.homework.entities.User;
 
@@ -15,31 +16,29 @@ public class UserController {
 
     private final UserService userService;
 
-    @GetMapping
-    public ResponseEntity<Collection<User>> getAllUsers() {
-        return ResponseEntity.ok(userService.findAll());
+    @PostMapping("/set_password")
+    public ResponseEntity updatePassword(String curPass, String newPass) {
+       userService.updatePassword(curPass, newPass);
+
+       return ResponseEntity.ok().build();
     }
 
-    @GetMapping("{id}")
-    public ResponseEntity<User> findUserById(@PathVariable Long id) {
-        return ResponseEntity.ok(userService.findById(id));
+    @GetMapping("/me")
+    public ResponseEntity<User> getUser() {
+        return ResponseEntity.ok(userService.getUser());
     }
 
-    @GetMapping
-    public ResponseEntity<User> findUserByName(@RequestBody String name) {
-        return ResponseEntity.ok(userService.findByName(name));
+    @PatchMapping("/me")
+    public ResponseEntity<User> updateUser(Long id, String email, String firstName, String lastName, int phone, AvatarUser avatarUser) {
+        return ResponseEntity.ok(userService.updateUser(id, email, firstName, lastName, phone, avatarUser));
     }
 
-    @PostMapping
-    public ResponseEntity<User> saveUser(User user) {
-        return ResponseEntity.ok(userService.save(user));
+    @PatchMapping("/me/image")
+    public ResponseEntity<AvatarUser> updateAvatar(AvatarUser avatarUser) {
+        return ResponseEntity.ok(userService.updateAvatar(avatarUser));
     }
 
-    @DeleteMapping("/delete/{id}")
-    private ResponseEntity deleteById(@PathVariable Long id) {
-        userService.deleteById(id);
-        return ResponseEntity.ok().build();
-    }
+
 
 
 }
