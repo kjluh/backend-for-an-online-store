@@ -1,7 +1,7 @@
 package ru.skypro.homework.service.impl;
 
 import org.springframework.stereotype.Service;
-import ru.skypro.homework.entities.InfoForAds;
+import ru.skypro.homework.dto.FullAds;
 import ru.skypro.homework.repositories.InfoForAdsRepository;
 import ru.skypro.homework.service.AdsService;
 
@@ -17,22 +17,22 @@ public class AdsServiceImpl implements AdsService {
     }
 
     @Override
-    public Collection<InfoForAds> findAll() {
+    public Collection<FullAds> findAll() {
         return infoForAdsRepository.findAll();
     }
 
     @Override
-    public InfoForAds save(InfoForAds infoForAds) {
+    public FullAds save(FullAds infoForAds) {
         return infoForAdsRepository.save(infoForAds);
     }
 
     @Override
-    public InfoForAds findById(Long id) {
+    public FullAds findById(Long id) {
         return infoForAdsRepository.findById(id).orElse(null);
     }
 
     @Override
-    public InfoForAds findByName(String name) {
+    public FullAds findByName(String name) {
         return infoForAdsRepository.findByUserName(name);
     }
 

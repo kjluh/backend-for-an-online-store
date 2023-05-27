@@ -5,9 +5,8 @@ import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
-import ru.skypro.homework.entities.InfoForAds;
-import ru.skypro.homework.dto.RegisterReq;
-import ru.skypro.homework.entities.User;
+import ru.skypro.homework.dto.FullAds;
+import ru.skypro.homework.dto.User;
 import ru.skypro.homework.service.AdsService;
 
 import java.util.Collection;
@@ -20,17 +19,17 @@ public class AdsController {
     private final AdsService adsService;
 
     @GetMapping
-    public ResponseEntity<Collection<InfoForAds>> getAllAds() {
+    public ResponseEntity<Collection<FullAds>> getAllAds() {
         return ResponseEntity.ok(adsService.findAll());
     }
 
     @PostMapping
-    public ResponseEntity<InfoForAds> saveNewAds(@RequestParam InfoForAds infoForAds) {
+    public ResponseEntity<FullAds> saveNewAds(@RequestParam FullAds infoForAds) {
         return ResponseEntity.ok(adsService.save(infoForAds));
     }
 
     @GetMapping("{id}")
-    public ResponseEntity<InfoForAds> findAdsById(@PathVariable Long id) {
+    public ResponseEntity<FullAds> findAdsById(@PathVariable Long id) {
         return ResponseEntity.ok(adsService.findById(id));
     }
 
@@ -41,16 +40,13 @@ public class AdsController {
     }
 
     @PutMapping("{id}")
-    public ResponseEntity<InfoForAds> updateAds(@RequestBody InfoForAds infoForAds){
-        return ResponseEntity.ok(adsService.save(infoForAds));
+    public ResponseEntity<FullAds> updateAds(@PathVariable Long id){
+        return ResponseEntity.ok(new FullAds());
     }
 
     @GetMapping("find_by_name")
-    public ResponseEntity<Collection<InfoForAds>> getInfoForAds(@RequestParam String name){
-        InfoForAds infoForAds = adsService.findByName(name);
-        User user = infoForAds.getUser();
-        Collection<InfoForAds> infoForAdsCollection = user.getInfoForAds();
-        return ResponseEntity.ok(infoForAdsCollection);
+    public ResponseEntity<Collection<FullAds>> getInfoForAds(@RequestParam String name){
+        return null;
     }
 
     @PostMapping(value = "ava/{id}",  consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
