@@ -1,12 +1,10 @@
 package ru.skypro.homework.service.impl;
 
 import org.springframework.stereotype.Service;
-import ru.skypro.homework.entities.AvatarUser;
-import ru.skypro.homework.entities.User;
+import ru.skypro.homework.dto.User;
 import ru.skypro.homework.repositories.UserRepository;
 import ru.skypro.homework.service.UserService;
 
-import java.util.Collection;
 @Service
 public class UserServiceImpl implements UserService {
 

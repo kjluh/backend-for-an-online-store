@@ -3,11 +3,9 @@ package ru.skypro.homework.controller;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import ru.skypro.homework.entities.AvatarUser;
+import ru.skypro.homework.dto.NewPassword;
+import ru.skypro.homework.dto.User;
 import ru.skypro.homework.service.UserService;
-import ru.skypro.homework.entities.User;
-
-import java.util.Collection;
 
 @RestController
 @RequestMapping("/user")
@@ -17,9 +15,8 @@ public class UserController {
     private final UserService userService;
 
     @PostMapping("/set_password")
-    public ResponseEntity updatePassword(String curPass, String newPass) {
-       userService.updatePassword(curPass, newPass);
-
+    public ResponseEntity updatePassword(@RequestBody NewPassword newPass) {
+       userService.updatePassword(newPass);
        return ResponseEntity.ok().build();
     }
 
@@ -29,13 +26,13 @@ public class UserController {
     }
 
     @PatchMapping("/me")
-    public ResponseEntity<User> updateUser(Long id, String email, String firstName, String lastName, int phone, AvatarUser avatarUser) {
-        return ResponseEntity.ok(userService.updateUser(id, email, firstName, lastName, phone, avatarUser));
+    public ResponseEntity<User> updateUser(User user) {
+        return ResponseEntity.ok(userService.updateUser(user));
     }
 
     @PatchMapping("/me/image")
-    public ResponseEntity<AvatarUser> updateAvatar(AvatarUser avatarUser) {
-        return ResponseEntity.ok(userService.updateAvatar(avatarUser));
+    public void updateAvatar(@RequestParam String avatarUser) {
+        ResponseEntity.ok(userService.updateAvatar(avatarUser));
     }
 
 

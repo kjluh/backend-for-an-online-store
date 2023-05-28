@@ -1,9 +1,7 @@
 package ru.skypro.homework.service;
 
-import ru.skypro.homework.entities.AvatarUser;
-import ru.skypro.homework.entities.User;
 
-import java.util.Collection;
+import ru.skypro.homework.dto.User;
 
 public interface UserService {
 
@@ -12,7 +10,7 @@ public interface UserService {
 
     User updateUser(Long id, String email, String firstName, String lastName, int phone, AvatarUser avatarUser);
 
-    AvatarUser updateAvatar(AvatarUser avatarUser);
+
 
 
 
