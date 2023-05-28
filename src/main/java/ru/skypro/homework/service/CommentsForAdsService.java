@@ -1,11 +1,11 @@
 package ru.skypro.homework.service;
 
-import ru.skypro.homework.entities.CommentsForAds;
+import ru.skypro.homework.dto.Comment;
 
 
 public interface CommentsForAdsService {
-    CommentsForAds save(CommentsForAds comments);
-    CommentsForAds get(Long id);
+    Comment save(Comment comments);
+    Comment get(Long id);
     void delete(Long id);
 
 }
