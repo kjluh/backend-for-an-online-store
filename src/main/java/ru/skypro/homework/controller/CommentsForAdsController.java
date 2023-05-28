@@ -3,32 +3,34 @@ package ru.skypro.homework.controller;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import ru.skypro.homework.entities.CommentsForAds;
+import ru.skypro.homework.dto.Comment;
+import ru.skypro.homework.dto.CreateComment;
 import ru.skypro.homework.service.CommentsForAdsService;
 
 @RestController
-@RequestMapping("/comments")
+@RequestMapping("/ads")
 @RequiredArgsConstructor
 public class CommentsForAdsController {
 
     private final CommentsForAdsService commentsForAdsService;
 
-    @GetMapping("{id}")
-    public ResponseEntity<CommentsForAds> getCom(@PathVariable Long id){
-       return ResponseEntity.ok(commentsForAdsService.get(id));
+    @GetMapping("{id}/comments")
+    public ResponseEntity<Comment> getCom(@PathVariable Long id) {
+        return ResponseEntity.ok(commentsForAdsService.get(id));
     }
 
-    @PostMapping()
-    public ResponseEntity<CommentsForAds> saveCom(@RequestBody CommentsForAds comments){
-        return ResponseEntity.ok(commentsForAdsService.save(comments));
+    @PostMapping("{id}/comments")
+    public ResponseEntity<Comment> saveCom(@PathVariable Long id, @RequestParam CreateComment createComment) {
+        return ResponseEntity.ok(commentsForAdsService.save(id, createComment));
     }
 
-    @PutMapping("{id}")
-    public ResponseEntity<CommentsForAds> updateCom(@RequestBody CommentsForAds comments){
-        return ResponseEntity.ok(commentsForAdsService.save(comments));
+    @DeleteMapping("{adId}/comments/{commentsId}")
+    public void deleteCom(@PathVariable Long adId, @PathVariable Long commentsId) {
+        commentsForAdsService.delete(adId, commentsId);
     }
-    @DeleteMapping("{id}")
-    public void deleteCom(@PathVariable Long id){
-        commentsForAdsService.delete(id);
+
+    @PatchMapping("{adId}/comments/{commentsId}")
+    public ResponseEntity<Comment> updateCom(@PathVariable Long adId, @PathVariable Long commentsId, @RequestBody Comment comment) {
+        return ResponseEntity.ok(commentsForAdsService.update(adId, commentsId ,comment));
     }
 }

@@ -1,13 +1,16 @@
 package ru.skypro.homework.service;
 
-import ru.skypro.homework.entities.InfoForAds;
+import org.springframework.web.multipart.MultipartFile;
+import ru.skypro.homework.dto.Ads;
+import ru.skypro.homework.dto.CreateAds;
+import ru.skypro.homework.dto.FullAds;
 
 import java.util.Collection;
 
 public interface AdsService {
-    Collection<InfoForAds> findAll();
-    InfoForAds save(InfoForAds infoForAds);
-    InfoForAds findById(Long id);
-    InfoForAds findByName(String name);
+    FullAds save(Ads ads, String s);
+    FullAds findById(Long id);
     void delete(Long id);
+    void updateCover(Long id, String s);
+    FullAds updateAsd(Long id, CreateAds createAds);
 }

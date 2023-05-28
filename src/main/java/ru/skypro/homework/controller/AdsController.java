@@ -5,9 +5,7 @@ import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
-import ru.skypro.homework.entities.InfoForAds;
-import ru.skypro.homework.dto.RegisterReq;
-import ru.skypro.homework.entities.User;
+import ru.skypro.homework.dto.*;
 import ru.skypro.homework.service.AdsService;
 
 import java.util.Collection;
@@ -20,17 +18,17 @@ public class AdsController {
     private final AdsService adsService;
 
     @GetMapping
-    public ResponseEntity<Collection<InfoForAds>> getAllAds() {
-        return ResponseEntity.ok(adsService.findAll());
+    public ResponseEntity<ResponseWrapperAds> getAllAds() {
+        return ResponseEntity.ok(new ResponseWrapperAds());
     }
 
     @PostMapping
-    public ResponseEntity<InfoForAds> saveNewAds(@RequestParam InfoForAds infoForAds) {
-        return ResponseEntity.ok(adsService.save(infoForAds));
+    public ResponseEntity<FullAds> saveNewAds(@RequestParam Ads ads, @RequestParam String avatarPath) {
+        return ResponseEntity.ok(adsService.save(ads, avatarPath));
     }
 
     @GetMapping("{id}")
-    public ResponseEntity<InfoForAds> findAdsById(@PathVariable Long id) {
+    public ResponseEntity<FullAds> findAdsById(@PathVariable Long id) {
         return ResponseEntity.ok(adsService.findById(id));
     }
 
@@ -40,22 +38,19 @@ public class AdsController {
         return ResponseEntity.ok().build();
     }
 
-    @PutMapping("{id}")
-    public ResponseEntity<InfoForAds> updateAds(@RequestBody InfoForAds infoForAds){
-        return ResponseEntity.ok(adsService.save(infoForAds));
+    @PatchMapping("{id}")
+    public ResponseEntity<FullAds> updateAds(@PathVariable Long id, @RequestBody CreateAds createAds) {
+        return ResponseEntity.ok(adsService.updateAsd(id, createAds));
     }
 
-    @GetMapping("find_by_name")
-    public ResponseEntity<Collection<InfoForAds>> getInfoForAds(@RequestParam String name){
-        InfoForAds infoForAds = adsService.findByName(name);
-        User user = infoForAds.getUser();
-        Collection<InfoForAds> infoForAdsCollection = user.getInfoForAds();
-        return ResponseEntity.ok(infoForAdsCollection);
+    @GetMapping("me")
+    public ResponseEntity<Collection<FullAds>> getInfoForAds() {
+        return null;
     }
 
-    @PostMapping(value = "ava/{id}",  consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
-    public void setAvatar(@PathVariable Long id, @RequestParam MultipartFile avatar){
-
+    @PatchMapping(value = "ava/{id}/image")
+    public void updateAvatar(@PathVariable Long id, @RequestParam String avatarPath) {
+        adsService.updateCover(id, avatarPath);
     }
 
 }

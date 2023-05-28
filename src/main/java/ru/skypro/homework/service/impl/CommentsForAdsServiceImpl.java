@@ -2,7 +2,9 @@ package ru.skypro.homework.service.impl;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
-import ru.skypro.homework.entities.CommentsForAds;
+import ru.skypro.homework.dto.Comment;
+import ru.skypro.homework.dto.CreateComment;
+import ru.skypro.homework.repositories.AdsRepository;
 import ru.skypro.homework.repositories.CommentsForAdsRepository;
 import ru.skypro.homework.service.CommentsForAdsService;
 @Service
@@ -10,18 +12,25 @@ import ru.skypro.homework.service.CommentsForAdsService;
 public class CommentsForAdsServiceImpl implements CommentsForAdsService {
 
     private final CommentsForAdsRepository commentsForAdsRepository;
+    private final AdsRepository adsRepository;
     @Override
-    public CommentsForAds save(CommentsForAds comments) {
+    public Comment save(CreateComment comments) {
+
        return commentsForAdsRepository.save(comments);
     }
 
     @Override
-    public CommentsForAds get(Long id) {
+    public Comment get(Long id) {
         return commentsForAdsRepository.findById(id).orElse(null);
     }
 
     @Override
     public void delete(Long id) {
         commentsForAdsRepository.deleteById(id);
+    }
+
+    @Override
+    public Comment update(Long adId, Long commentsId, Comment comment) {
+        return null;
     }
 }
