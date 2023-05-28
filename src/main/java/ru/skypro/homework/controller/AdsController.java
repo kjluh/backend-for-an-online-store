@@ -5,8 +5,7 @@ import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
-import ru.skypro.homework.dto.FullAds;
-import ru.skypro.homework.dto.User;
+import ru.skypro.homework.dto.*;
 import ru.skypro.homework.service.AdsService;
 
 import java.util.Collection;
@@ -19,13 +18,13 @@ public class AdsController {
     private final AdsService adsService;
 
     @GetMapping
-    public ResponseEntity<Collection<FullAds>> getAllAds() {
-        return ResponseEntity.ok(adsService.findAll());
+    public ResponseEntity<ResponseWrapperAds> getAllAds() {
+        return ResponseEntity.ok(new ResponseWrapperAds());
     }
 
     @PostMapping
-    public ResponseEntity<FullAds> saveNewAds(@RequestParam FullAds infoForAds) {
-        return ResponseEntity.ok(adsService.save(infoForAds));
+    public ResponseEntity<FullAds> saveNewAds(@RequestParam Ads ads, @RequestParam String avatarPath) {
+        return ResponseEntity.ok(adsService.save(ads, avatarPath));
     }
 
     @GetMapping("{id}")
@@ -39,19 +38,19 @@ public class AdsController {
         return ResponseEntity.ok().build();
     }
 
-    @PutMapping("{id}")
-    public ResponseEntity<FullAds> updateAds(@PathVariable Long id){
-        return ResponseEntity.ok(new FullAds());
+    @PatchMapping("{id}")
+    public ResponseEntity<FullAds> updateAds(@PathVariable Long id, @RequestBody CreateAds createAds) {
+        return ResponseEntity.ok(adsService.updateAsd(id, createAds));
     }
 
-    @GetMapping("find_by_name")
-    public ResponseEntity<Collection<FullAds>> getInfoForAds(@RequestParam String name){
+    @GetMapping("me")
+    public ResponseEntity<Collection<FullAds>> getInfoForAds() {
         return null;
     }
 
-    @PostMapping(value = "ava/{id}",  consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
-    public void setAvatar(@PathVariable Long id, @RequestParam MultipartFile avatar){
-
+    @PatchMapping(value = "ava/{id}/image")
+    public void updateAvatar(@PathVariable Long id, @RequestParam String avatarPath) {
+        adsService.updateCover(id, avatarPath);
     }
 
 }

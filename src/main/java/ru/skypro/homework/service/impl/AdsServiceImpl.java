@@ -1,45 +1,44 @@
 package ru.skypro.homework.service.impl;
 
 import org.springframework.stereotype.Service;
+import ru.skypro.homework.dto.Ads;
+import ru.skypro.homework.dto.CreateAds;
 import ru.skypro.homework.dto.FullAds;
-import ru.skypro.homework.repositories.InfoForAdsRepository;
+import ru.skypro.homework.repositories.AdsRepository;
 import ru.skypro.homework.service.AdsService;
-
-import java.util.Collection;
 
 @Service
 public class AdsServiceImpl implements AdsService {
 
-    private InfoForAdsRepository infoForAdsRepository;
+    private AdsRepository adsRepository;
 
-    public AdsServiceImpl(InfoForAdsRepository infoForAdsRepository) {
-        this.infoForAdsRepository = infoForAdsRepository;
+    public AdsServiceImpl(AdsRepository adsRepository) {
+        this.adsRepository = adsRepository;
     }
 
-    @Override
-    public Collection<FullAds> findAll() {
-        return infoForAdsRepository.findAll();
-    }
 
     @Override
-    public FullAds save(FullAds infoForAds) {
-        return infoForAdsRepository.save(infoForAds);
+    public FullAds save(Ads ads, String s) {
+        return null;
     }
 
     @Override
     public FullAds findById(Long id) {
-        return infoForAdsRepository.findById(id).orElse(null);
-    }
-
-    @Override
-    public FullAds findByName(String name) {
-        return infoForAdsRepository.findByUserName(name);
+        return null;
     }
 
     @Override
     public void delete(Long id) {
-        infoForAdsRepository.deleteById(id);
+
     }
 
+    @Override
+    public void updateCover(Long id, String s) {
 
+    }
+
+    @Override
+    public FullAds updateAsd(Long id, CreateAds createAds) {
+        return null;
+    }
 }
