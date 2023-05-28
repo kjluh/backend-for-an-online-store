@@ -24,7 +24,7 @@ public class Comment {
     /**
      * Дата и время создания комментария в миллисекундах с 00:00:00 01.01.1970
      */
-    private LocalDateTime createdAt;
+    private Long createdAt;
     /**
      * ID комментария
      */
