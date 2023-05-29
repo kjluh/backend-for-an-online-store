@@ -48,7 +48,7 @@ public class AdsController {
         return ResponseEntity.ok().build();
     }
 
-    @PatchMapping(value = "ava/{id}/image")
+    @PatchMapping(value = "/{id}/image")
     public void updateAvatar(@PathVariable Long id, @RequestParam String avatarPath) {
         // Обновление аватарки
     }

@@ -25,13 +25,13 @@ public class CommentsForAdsController {
         return ResponseEntity.ok().build();
     }
 
-    @DeleteMapping("{adId}/comments/{commentsId}")
-    public ResponseEntity deleteCom(@PathVariable Long adId, @PathVariable Long commentsId) {
+    @DeleteMapping("{adId}/comments/{commentId}")
+    public ResponseEntity deleteCom(@PathVariable Long adId, @PathVariable Long commentId) {
         return ResponseEntity.ok().build();
     }
 
-    @PatchMapping("{adId}/comments/{commentsId}")
-    public ResponseEntity<Comment> updateCom(@PathVariable Long adId, @PathVariable Long commentsId, @RequestBody Comment comment) {
+    @PatchMapping("{adId}/comments/{commentId}")
+    public ResponseEntity<Comment> updateCom(@PathVariable Long adId, @PathVariable Long commentId, @RequestBody Comment comment) {
         return ResponseEntity.ok().build();
     }
 }
