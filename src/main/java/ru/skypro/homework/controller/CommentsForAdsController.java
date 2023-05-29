@@ -10,27 +10,28 @@ import ru.skypro.homework.service.CommentsForAdsService;
 @RestController
 @RequestMapping("/ads")
 @RequiredArgsConstructor
+@CrossOrigin(value = "http://localhost:3000")
 public class CommentsForAdsController {
 
     private final CommentsForAdsService commentsForAdsService;
 
     @GetMapping("{id}/comments")
     public ResponseEntity<Comment> getCom(@PathVariable Long id) {
-        return ResponseEntity.ok(commentsForAdsService.get(id));
+        return ResponseEntity.ok().build();
     }
 
     @PostMapping("{id}/comments")
     public ResponseEntity<Comment> saveCom(@PathVariable Long id, @RequestParam CreateComment createComment) {
-        return ResponseEntity.ok(commentsForAdsService.save(id, createComment));
+        return ResponseEntity.ok().build();
     }
 
     @DeleteMapping("{adId}/comments/{commentsId}")
-    public void deleteCom(@PathVariable Long adId, @PathVariable Long commentsId) {
-        commentsForAdsService.delete(adId, commentsId);
+    public ResponseEntity deleteCom(@PathVariable Long adId, @PathVariable Long commentsId) {
+        return ResponseEntity.ok().build();
     }
 
     @PatchMapping("{adId}/comments/{commentsId}")
     public ResponseEntity<Comment> updateCom(@PathVariable Long adId, @PathVariable Long commentsId, @RequestBody Comment comment) {
-        return ResponseEntity.ok(commentsForAdsService.update(adId, commentsId ,comment));
+        return ResponseEntity.ok().build();
     }
 }

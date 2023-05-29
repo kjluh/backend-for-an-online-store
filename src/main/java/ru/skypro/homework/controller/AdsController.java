@@ -13,44 +13,44 @@ import java.util.Collection;
 @RestController
 @RequestMapping("/ads")
 @RequiredArgsConstructor
+@CrossOrigin(value = "http://localhost:3000")
 public class AdsController {
 
     private final AdsService adsService;
 
     @GetMapping
     public ResponseEntity<ResponseWrapperAds> getAllAds() {
-        return ResponseEntity.ok(new ResponseWrapperAds());
+        return ResponseEntity.ok().build();
     }
 
     @PostMapping
     public ResponseEntity<FullAds> saveNewAds(@RequestParam Ads ads, @RequestParam String avatarPath) {
-        return ResponseEntity.ok(adsService.save(ads, avatarPath));
+        return ResponseEntity.ok().build();
     }
 
     @GetMapping("{id}")
     public ResponseEntity<FullAds> findAdsById(@PathVariable Long id) {
-        return ResponseEntity.ok(adsService.findById(id));
+        return ResponseEntity.ok().build();
     }
 
     @DeleteMapping("{id}")
     public ResponseEntity deleteAds(@PathVariable Long id) {
-        adsService.delete(id);
         return ResponseEntity.ok().build();
     }
 
     @PatchMapping("{id}")
     public ResponseEntity<FullAds> updateAds(@PathVariable Long id, @RequestBody CreateAds createAds) {
-        return ResponseEntity.ok(adsService.updateAsd(id, createAds));
+        return ResponseEntity.ok().build();
     }
 
     @GetMapping("me")
     public ResponseEntity<Collection<FullAds>> getInfoForAds() {
-        return null;
+        return ResponseEntity.ok().build();
     }
 
     @PatchMapping(value = "ava/{id}/image")
     public void updateAvatar(@PathVariable Long id, @RequestParam String avatarPath) {
-        adsService.updateCover(id, avatarPath);
+        // Обновление аватарки
     }
 
 }

@@ -11,7 +11,7 @@ public class FullAds {
     /**
      * ID объявления
      */
-    private Long pk;
+    private int pk;
     /**
      * Имя автора объявления
      */
@@ -43,6 +43,6 @@ public class FullAds {
     /**
      * Заголовок объявления
      */
-    private int title;
+    private String title;
 
 }

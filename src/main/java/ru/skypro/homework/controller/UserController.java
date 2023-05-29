@@ -10,29 +10,29 @@ import ru.skypro.homework.service.UserService;
 @RestController
 @RequestMapping("/user")
 @RequiredArgsConstructor
+@CrossOrigin(value = "http://localhost:3000")
 public class UserController {
 
     private final UserService userService;
 
     @PostMapping("/set_password")
     public ResponseEntity updatePassword(@RequestBody NewPassword newPass) {
-       userService.updatePassword(newPass);
        return ResponseEntity.ok().build();
     }
 
     @GetMapping("/me")
     public ResponseEntity<User> getUser() {
-        return ResponseEntity.ok(userService.getUser());
+        return ResponseEntity.ok().build();
     }
 
     @PatchMapping("/me")
     public ResponseEntity<User> updateUser(User user) {
-        return ResponseEntity.ok(userService.updateUser(user));
+        return ResponseEntity.ok().build();
     }
 
     @PatchMapping("/me/image")
-    public void updateAvatar(@RequestParam String avatarUser) {
-        ResponseEntity.ok(userService.updateAvatar(avatarUser));
+    public ResponseEntity updateAvatar(@RequestParam String avatarUser) {
+        return ResponseEntity.ok().build();
     }
 
 

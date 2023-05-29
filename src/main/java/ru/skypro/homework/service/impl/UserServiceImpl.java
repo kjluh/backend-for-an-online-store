@@ -22,7 +22,7 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public User updateUser(Long id, String email, String firstName, String lastName, int phone, AvatarUser avatarUser) {
+    public User updateUser(int id, String email, String firstName, String lastName, String phone, String avatarUser) {
         User temp = new User(); // Временное решение пока не реализована "авторизация"
 
         temp.setId(id);
@@ -30,26 +30,26 @@ public class UserServiceImpl implements UserService {
         temp.setFirstName(firstName);
         temp.setLastName(lastName);
         temp.setPhone(phone);
-        temp.setAvatarReq(avatarUser);
+        temp.setImage(avatarUser);
 
         return temp;
     }
 
-    @Override
-    public void updatePassword(String curPass, String newPass) {
-        User temp = new User(); // Временное решение пока не реализована "авторизация"
-
-        if(curPass.equals(temp.getPassword())){
-            temp.setPassword(newPass);
-        }
-    }
-
-    @Override
-    public AvatarUser updateAvatar(AvatarUser avatarUser) {
-        User temp = new User(); // Временное решение пока не реализована "авторизация"
-
-        temp.setAvatarReq(avatarUser);
-
-        return avatarUser;
-    }
+//    @Override
+//    public void updatePassword(String curPass, String newPass) {
+//        User temp = new User(); // Временное решение пока не реализована "авторизация"
+//
+//        if(curPass.equals(temp.getPassword())){
+//            temp.setPassword(newPass);
+//        }
+//    }
+//
+//    @Override
+//    public String updateAvatar(String avatarUser) {
+//        User temp = new User(); // Временное решение пока не реализована "авторизация"
+//
+//        temp.setImage(avatarUser);
+//
+//        return avatarUser;
+//    }
 }
