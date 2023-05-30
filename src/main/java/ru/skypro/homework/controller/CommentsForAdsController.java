@@ -5,7 +5,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import ru.skypro.homework.dto.Comment;
 import ru.skypro.homework.dto.CreateComment;
-import ru.skypro.homework.service.CommentsForAdsService;
 
 @RestController
 @RequestMapping("/ads")
@@ -13,7 +12,7 @@ import ru.skypro.homework.service.CommentsForAdsService;
 @CrossOrigin(value = "http://localhost:3000")
 public class CommentsForAdsController {
 
-    private final CommentsForAdsService commentsForAdsService;
+    //private final CommentsForAdsService commentsForAdsService;
 
     @GetMapping("{id}/comments")
     public ResponseEntity<Comment> getCom(@PathVariable Long id) {
