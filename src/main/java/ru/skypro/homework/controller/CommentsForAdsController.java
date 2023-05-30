@@ -21,7 +21,7 @@ public class CommentsForAdsController {
     }
 
     @PostMapping("{id}/comments")
-    public ResponseEntity<Comment> saveCom(@PathVariable Long id, @RequestParam CreateComment createComment) {
+    public ResponseEntity<Comment> saveCom(@PathVariable Long id, @RequestBody CreateComment createComment) {
         return ResponseEntity.ok().build();
     }
 

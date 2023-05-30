@@ -5,6 +5,7 @@ import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
+import org.springframework.web.multipart.MultipartRequest;
 import ru.skypro.homework.dto.*;
 import ru.skypro.homework.service.AdsService;
 
@@ -24,7 +25,8 @@ public class AdsController {
     }
 
     @PostMapping
-    public ResponseEntity<FullAds> saveNewAds(@RequestParam Ads ads, @RequestParam String avatarPath) {
+    public ResponseEntity<FullAds> saveNewAd(@RequestPart("properties") CreateAds ads,
+                                             @RequestPart("image") MultipartFile image) {
         return ResponseEntity.ok().build();
     }
 
@@ -49,8 +51,9 @@ public class AdsController {
     }
 
     @PatchMapping(value = "/{id}/image")
-    public void updateAvatar(@PathVariable Long id, @RequestParam String avatarPath) {
+    public ResponseEntity<?> updateAvatar(@PathVariable Long id, @RequestPart("image") MultipartFile image) {
         // Обновление аватарки
+        return ResponseEntity.ok().build();
     }
 
 }

@@ -3,6 +3,7 @@ package ru.skypro.homework.controller;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 import ru.skypro.homework.dto.NewPassword;
 import ru.skypro.homework.dto.User;
 import ru.skypro.homework.service.UserService;
@@ -26,12 +27,12 @@ public class UserController {
     }
 
     @PatchMapping("/me")
-    public ResponseEntity<User> updateUser(User user) {
+    public ResponseEntity<User> updateUser(@RequestBody User user) {
         return ResponseEntity.ok().build();
     }
 
     @PatchMapping("/me/image")
-    public ResponseEntity updateAvatar(@RequestParam String avatarUser) {
+    public ResponseEntity updateAvatar(@RequestPart("image") MultipartFile image) {
         return ResponseEntity.ok().build();
     }
 

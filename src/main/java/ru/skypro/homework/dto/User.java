@@ -7,12 +7,12 @@ import javax.persistence.*;
 import java.util.Collection;
 
 /**
- * Аватарка объявления
+ * Пользователь DTO
  */
 @Data
 public class User {
     /**
-     * ID аватарки объявления
+     * ID пользователя
      */
     private int id;
     /**
