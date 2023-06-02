@@ -1,6 +1,7 @@
 package ru.skypro.homework.controller;
 
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
@@ -30,8 +31,8 @@ public class UserController {
         return ResponseEntity.ok().build();
     }
 
-    @PatchMapping("/me/image")
-    public ResponseEntity updateAvatar(@RequestPart("image") MultipartFile image) {
+    @PatchMapping(value = "/me/image",consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+    public ResponseEntity updateAvatar(@RequestParam MultipartFile image) {
         return ResponseEntity.ok().build();
     }
 

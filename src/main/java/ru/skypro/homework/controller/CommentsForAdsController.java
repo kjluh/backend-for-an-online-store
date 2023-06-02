@@ -5,6 +5,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import ru.skypro.homework.dto.Comment;
 import ru.skypro.homework.dto.CreateComment;
+import ru.skypro.homework.dto.ResponseWrapperComment;
 
 @RestController
 @RequestMapping("/ads")
@@ -15,7 +16,7 @@ public class CommentsForAdsController {
     //private final CommentsForAdsService commentsForAdsService;
 
     @GetMapping("{id}/comments")
-    public ResponseEntity<Comment> getCom(@PathVariable Long id) {
+    public ResponseEntity<ResponseWrapperComment> getCom(@PathVariable Long id) {
         return ResponseEntity.ok().build();
     }
 

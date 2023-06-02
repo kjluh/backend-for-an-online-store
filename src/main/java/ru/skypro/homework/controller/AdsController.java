@@ -1,6 +1,7 @@
 package ru.skypro.homework.controller;
 
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
@@ -21,9 +22,9 @@ public class AdsController {
         return ResponseEntity.ok().build();
     }
 
-    @PostMapping
-    public ResponseEntity<FullAds> saveNewAd(@RequestPart("properties") CreateAds ads,
-                                             @RequestPart("image") MultipartFile image) {
+    @PostMapping(consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+    public ResponseEntity<Ads> saveNewAd(@RequestBody Ads properties,
+                                             @RequestParam MultipartFile image) {
         return ResponseEntity.ok().build();
     }
 
@@ -38,17 +39,17 @@ public class AdsController {
     }
 
     @PatchMapping("{id}")
-    public ResponseEntity<FullAds> updateAds(@PathVariable Long id, @RequestBody CreateAds createAds) {
+    public ResponseEntity<Ads> updateAds(@PathVariable Long id, @RequestBody CreateAds createAds) {
         return ResponseEntity.ok().build();
     }
 
     @GetMapping("me")
-    public ResponseEntity<Collection<FullAds>> getInfoForAds() {
+    public ResponseEntity<ResponseWrapperAds> getInfoForAds() {
         return ResponseEntity.ok().build();
     }
 
-    @PatchMapping(value = "/{id}/image")
-    public ResponseEntity<?> updateAvatar(@PathVariable Long id, @RequestPart("image") MultipartFile image) {
+    @PatchMapping(value = "/{id}/image",consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+    public ResponseEntity<?> updateAvatar(@PathVariable Long id, @RequestParam MultipartFile image) {
         // Обновление аватарки
         return ResponseEntity.ok().build();
     }
