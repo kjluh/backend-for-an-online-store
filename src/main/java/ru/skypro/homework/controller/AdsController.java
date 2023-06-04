@@ -23,8 +23,8 @@ public class AdsController {
     }
 
     @PostMapping(consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
-    public ResponseEntity<Ads> saveNewAd(@RequestBody Ads properties,
-                                             @RequestParam MultipartFile image) {
+    public ResponseEntity<Ads> saveNewAd(@RequestPart Ads properties,
+                                             @RequestPart MultipartFile image) {
         return ResponseEntity.ok().build();
     }
 
@@ -49,7 +49,7 @@ public class AdsController {
     }
 
     @PatchMapping(value = "/{id}/image",consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
-    public ResponseEntity<?> updateAvatar(@PathVariable Long id, @RequestParam MultipartFile image) {
+    public ResponseEntity<?> updateAvatar(@PathVariable Long id, @RequestPart MultipartFile image) {
         // Обновление аватарки
         return ResponseEntity.ok().build();
     }
