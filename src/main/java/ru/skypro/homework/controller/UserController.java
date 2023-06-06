@@ -7,6 +7,7 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 import ru.skypro.homework.dto.NewPassword;
 import ru.skypro.homework.dto.User;
+import ru.skypro.homework.service.UserService;
 
 @RestController
 @RequestMapping("/users")
@@ -14,7 +15,7 @@ import ru.skypro.homework.dto.User;
 @CrossOrigin(value = "http://localhost:3000")
 public class UserController {
 
-    //private final UserService userService;
+    private final UserService userService;
 
     @PostMapping("/set_password")
     public ResponseEntity updatePassword(@RequestBody NewPassword newPass) {

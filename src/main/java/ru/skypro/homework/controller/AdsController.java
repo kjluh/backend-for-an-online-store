@@ -6,8 +6,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 import ru.skypro.homework.dto.*;
-
-import java.util.Collection;
+import ru.skypro.homework.service.AdsService;
 
 @RestController
 @RequestMapping("/ads")
@@ -15,7 +14,7 @@ import java.util.Collection;
 @CrossOrigin(value = "http://localhost:3000")
 public class AdsController {
 
-    //private final AdsService adsService;
+    private final AdsService adsService;
 
     @GetMapping
     public ResponseEntity<ResponseWrapperAds> getAllAds() {
@@ -29,17 +28,17 @@ public class AdsController {
     }
 
     @GetMapping("{id}")
-    public ResponseEntity<FullAds> findAdsById(@PathVariable Long id) {
+    public ResponseEntity<FullAds> findAdsById(@PathVariable int id) {
         return ResponseEntity.ok().build();
     }
 
     @DeleteMapping("{id}")
-    public ResponseEntity deleteAds(@PathVariable Long id) {
+    public ResponseEntity<?> deleteAds(@PathVariable int id) {
         return ResponseEntity.ok().build();
     }
 
     @PatchMapping("{id}")
-    public ResponseEntity<Ads> updateAds(@PathVariable Long id, @RequestBody CreateAds createAds) {
+    public ResponseEntity<Ads> updateAds(@PathVariable int id, @RequestBody CreateAds createAds) {
         return ResponseEntity.ok().build();
     }
 
@@ -49,7 +48,7 @@ public class AdsController {
     }
 
     @PatchMapping(value = "/{id}/image",consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
-    public ResponseEntity<?> updateAvatar(@PathVariable Long id, @RequestPart MultipartFile image) {
+    public ResponseEntity<?> updateAvatar(@PathVariable int id, @RequestPart MultipartFile image) {
         // Обновление аватарки
         return ResponseEntity.ok().build();
     }

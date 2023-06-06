@@ -1,27 +1,23 @@
-package ru.skypro.homework.service.impl;
+package ru.skypro.homework.service;
 
 import org.springframework.stereotype.Service;
 import ru.skypro.homework.dto.User;
 import ru.skypro.homework.repositories.UserRepository;
-import ru.skypro.homework.service.UserService;
 
 @Service
-public class UserServiceImpl implements UserService {
+public class UserService {
 
 
     private final UserRepository userRepository;
 
-    public UserServiceImpl(UserRepository userRepository) {
+    public UserService(UserRepository userRepository) {
         this.userRepository = userRepository;
     }
 
-
-    @Override
     public User getUser() {
         return new User(); // Временное решение пока не реализована "авторизация"
     }
 
-    @Override
     public User updateUser(int id, String email, String firstName, String lastName, String phone, String avatarUser) {
         User temp = new User(); // Временное решение пока не реализована "авторизация"
 
@@ -35,7 +31,6 @@ public class UserServiceImpl implements UserService {
         return temp;
     }
 
-//    @Override
 //    public void updatePassword(String curPass, String newPass) {
 //        User temp = new User(); // Временное решение пока не реализована "авторизация"
 //
@@ -43,8 +38,7 @@ public class UserServiceImpl implements UserService {
 //            temp.setPassword(newPass);
 //        }
 //    }
-//
-//    @Override
+
 //    public String updateAvatar(String avatarUser) {
 //        User temp = new User(); // Временное решение пока не реализована "авторизация"
 //
