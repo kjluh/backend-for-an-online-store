@@ -1,10 +1,6 @@
 package ru.skypro.homework.dto;
 
 import lombok.Data;
-import ru.skypro.homework.dto.FullAds;
-
-import javax.persistence.*;
-import java.util.Collection;
 
 /**
  * Пользователь DTO

@@ -19,11 +19,13 @@ public class UserController {
 
     @PostMapping("/set_password")
     public ResponseEntity updatePassword(@RequestBody NewPassword newPass) {
+//        userService.updatePassword(newPass);
        return ResponseEntity.ok().build();
     }
 
     @GetMapping("/me")
     public ResponseEntity<User> getUser() {
+
         return ResponseEntity.ok().build();
     }
 
