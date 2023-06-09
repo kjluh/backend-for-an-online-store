@@ -5,8 +5,10 @@ import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
-import ru.skypro.homework.dto.*;
-import ru.skypro.homework.service.AdsService;
+import ru.skypro.homework.dto.Ads;
+import ru.skypro.homework.dto.CreateAds;
+import ru.skypro.homework.dto.FullAds;
+import ru.skypro.homework.dto.ResponseWrapperAds;
 
 @RestController
 @RequestMapping("/ads")
@@ -14,7 +16,7 @@ import ru.skypro.homework.service.AdsService;
 @CrossOrigin(value = "http://localhost:3000")
 public class AdsController {
 
-    private final AdsService adsService;
+//    private final AdsService adsService;
 
     @GetMapping
     public ResponseEntity<ResponseWrapperAds> getAllAds() {

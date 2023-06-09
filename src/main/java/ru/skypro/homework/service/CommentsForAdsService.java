@@ -1,6 +1,5 @@
 package ru.skypro.homework.service;
 
-import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import ru.skypro.homework.dto.Comment;
 import ru.skypro.homework.dto.CreateComment;
@@ -8,11 +7,16 @@ import ru.skypro.homework.repositories.AdsRepository;
 import ru.skypro.homework.repositories.CommentsForAdsRepository;
 
 @Service
-@RequiredArgsConstructor
+
 public class CommentsForAdsService {
 
     private final CommentsForAdsRepository commentsForAdsRepository;
     private final AdsRepository adsRepository;
+
+    public CommentsForAdsService(CommentsForAdsRepository commentsForAdsRepository, AdsRepository adsRepository) {
+        this.commentsForAdsRepository = commentsForAdsRepository;
+        this.adsRepository = adsRepository;
+    }
 
     public Comment save(CreateComment comment) {
 
