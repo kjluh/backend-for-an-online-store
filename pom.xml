@@ -32,6 +32,15 @@
       <artifactId>spring-boot-starter-security</artifactId>
     </dependency>
     <!--suppress VulnerableLibrariesLocal -->
+
+    <!-- https://mvnrepository.com/artifact/org.projectlombok/lombok -->
+    <dependency>
+      <groupId>org.projectlombok</groupId>
+      <artifactId>lombok</artifactId>
+      <version>1.18.28</version>
+      <scope>provided</scope>
+    </dependency>
+
     <dependency>
       <groupId>com.h2database</groupId>
       <artifactId>h2</artifactId>
@@ -97,6 +106,7 @@
             <path>
               <groupId>org.projectlombok</groupId>
               <artifactId>lombok</artifactId>
+              <version>1.18.28</version>
             </path>
             <!-- This is needed when using Lombok 1.18.16 and above -->
             <path>

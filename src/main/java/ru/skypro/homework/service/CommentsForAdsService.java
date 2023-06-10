@@ -3,8 +3,8 @@ package ru.skypro.homework.service;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import ru.skypro.homework.dto.Comment;
 import ru.skypro.homework.dto.CreateComment;
+import ru.skypro.homework.entity.Comment;
 import ru.skypro.homework.repositories.AdsRepository;
 import ru.skypro.homework.repositories.CommentsForAdsRepository;
 
@@ -22,11 +22,11 @@ public class CommentsForAdsService {
        return null;//commentsForAdsRepository.save(comment); //Временное решение, нужно сохранять уже нашу сущность, не ДТО
     }
 
-    public Comment get(Long id) {
+    public Comment get(Integer id) {
         return commentsForAdsRepository.findById(id).orElse(null);
     }
 
-    public void delete(Long id) {
+    public void delete(Integer id) {
         commentsForAdsRepository.deleteById(id);
     }
 

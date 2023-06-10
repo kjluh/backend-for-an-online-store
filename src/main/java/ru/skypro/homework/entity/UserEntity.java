@@ -16,6 +16,7 @@ public class UserEntity {
     /**
      * Роль пользователя
      */
+    @Enumerated(EnumType.STRING)
     private Role role;
     /**
      * Логин пользователя

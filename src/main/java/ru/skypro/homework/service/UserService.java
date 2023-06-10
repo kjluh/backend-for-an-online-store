@@ -2,6 +2,7 @@ package ru.skypro.homework.service;
 
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 import ru.skypro.homework.dto.NewPassword;
@@ -29,8 +30,13 @@ public class UserService {
        userEntityRepository.save(userEntity);
     }
 
-    public User getUser(String userName) {
-        UserEntity userEntity =  userEntityRepository.findByFirstNameContainsIgnoreCase(userName);
+    public User getUser(Authentication authentication) {
+        UserEntity userEntity =  userEntityRepository.findByFirstNameContainsIgnoreCase(authentication.getName());
+        if (userEntity==null){
+            userEntity = new UserEntity();
+            userEntity.setUsername(authentication.getName());
+            userEntityRepository.save(userEntity);
+        }
         return UserMapper.INSTANCE.toDTO(userEntity);
     }
 
@@ -53,5 +59,8 @@ public class UserService {
         avatarUserEntityRepository.save(avatar);
         userEntity.setAvatarUserEntity(avatar);
         userEntityRepository.save(userEntity);
+    }
+    public byte[] getURLAvatar(Integer id){
+        return avatarUserEntityRepository.findById(id).orElseThrow().getData();
     }
 }
