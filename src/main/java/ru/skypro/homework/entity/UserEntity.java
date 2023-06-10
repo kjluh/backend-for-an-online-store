@@ -26,10 +26,6 @@ public class UserEntity {
      */
     private String password;
     /**
-     * Логин пользователя
-     */
-    private String email;
-    /**
      * Имя пользователя
      */
     private String firstName;
