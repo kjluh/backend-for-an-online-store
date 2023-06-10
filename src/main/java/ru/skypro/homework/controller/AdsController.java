@@ -22,8 +22,9 @@ public class AdsController {
     }
 
     @PostMapping(consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
-    public ResponseEntity<Ads> saveNewAd(@RequestPart Ads properties,
+    public ResponseEntity<Ads> saveNewAd(@RequestPart CreateAds properties,
                                              @RequestPart MultipartFile image) {
+        adsService.saveNewAd(properties, image);
         return ResponseEntity.ok().build();
     }
 
