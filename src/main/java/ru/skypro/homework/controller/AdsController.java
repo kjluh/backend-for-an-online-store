@@ -1,6 +1,7 @@
 package ru.skypro.homework.controller;
 
 import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -10,11 +11,11 @@ import ru.skypro.homework.service.AdsService;
 
 @RestController
 @RequestMapping("/ads")
-@RequiredArgsConstructor
 @CrossOrigin(value = "http://localhost:3000")
 public class AdsController {
 
-    private final AdsService adsService;
+    @Autowired
+    private AdsService adsService;
 
     @GetMapping
     public ResponseEntity<ResponseWrapperAds> getAllAds() {
