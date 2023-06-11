@@ -7,7 +7,7 @@ import java.time.LocalDateTime;
 
 
 @Data
-
+@Entity
 public class CommentEntity {
 
     /**
@@ -20,6 +20,7 @@ public class CommentEntity {
     /**
      * Данные автора комментария
      */
+    @OneToOne
     private UserEntity user;
 
     /**
