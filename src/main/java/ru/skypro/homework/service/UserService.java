@@ -27,14 +27,14 @@ public class UserService {
 
 
     public void updatePassword(NewPassword newPass, String userName) {
-       UserEntity userEntity =  userEntityRepository.findByUsername(userName);
+       UserEntity userEntity =  getUserEntity(userName);
        userEntity.setPassword(newPass.getNewPassword());
        userEntityRepository.save(userEntity);
     }
 
     @Transactional(readOnly = true)
     public User getUser(String userName) {
-        UserEntity userEntity =  userEntityRepository.findByUsername(userName);
+        UserEntity userEntity =  getUserEntity(userName);
         User thisUser = UserMapper.INSTANCE.toDTO(userEntity);
 //        if (thisUser.getImage()==null && avatarUserEntityRepository.findById(userEntity.getId())!=null){
 //            thisUser.setImage("/users/avatar/"+userEntity.getId()+"/db");
@@ -44,7 +44,7 @@ public class UserService {
 
     @Transactional
     public User updateUser(User user, String userName) {
-        UserEntity userEntity =  userEntityRepository.findByUsername(userName);
+        UserEntity userEntity =  getUserEntity(userName);
 
         UserMapper.INSTANCE.toEntity(user,userEntity);
         userEntityRepository.save(userEntity);
@@ -53,7 +53,7 @@ public class UserService {
 
     @Transactional // необходимо писать если вызываем сущность из бд с картинкой в параметрах с анат @lob
     public void updateAvatar(MultipartFile image, String userName) throws IOException {
-        UserEntity userEntity =  userEntityRepository.findByUsername(userName);
+        UserEntity userEntity =  getUserEntity(userName);
 
         AvatarUserEntity avatar = avatarUserEntityRepository.findById(
                 (userEntity.getId())).orElse(new AvatarUserEntity());
@@ -65,6 +65,11 @@ public class UserService {
         avatarUserEntityRepository.save(avatar);
         userEntity.setAvatarUserEntity(avatar);
         userEntityRepository.save(userEntity);
+    }
+
+    public UserEntity getUserEntity(String userName){
+        UserEntity userEntity =  userEntityRepository.findByUsername(userName);
+        return userEntity;
     }
     public byte[] getURLAvatar(Integer id){
         return avatarUserEntityRepository.findById(id).orElseThrow().getData();
