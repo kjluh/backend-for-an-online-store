@@ -4,8 +4,10 @@ package ru.skypro.homework.service;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 import ru.skypro.homework.dto.NewPassword;
+import ru.skypro.homework.dto.RegisterReq;
 import ru.skypro.homework.dto.User;
 import ru.skypro.homework.entity.AvatarUserEntity;
 import ru.skypro.homework.entity.UserEntity;
@@ -25,29 +27,33 @@ public class UserService {
 
 
     public void updatePassword(NewPassword newPass, String userName) {
-       UserEntity userEntity =  userEntityRepository.findByFirstNameContainsIgnoreCase(userName);
+       UserEntity userEntity =  userEntityRepository.findByUsername(userName);
        userEntity.setPassword(newPass.getNewPassword());
        userEntityRepository.save(userEntity);
     }
 
-    public User getUser(Authentication authentication) {
-        UserEntity userEntity =  userEntityRepository.findByFirstNameContainsIgnoreCase(authentication.getName());
-        if (userEntity==null){
-            userEntity = new UserEntity();
-            userEntity.setUsername(authentication.getName());
-            userEntityRepository.save(userEntity);
-        }
-        return UserMapper.INSTANCE.toDTO(userEntity);
+    @Transactional(readOnly = true)
+    public User getUser(String userName) {
+        UserEntity userEntity =  userEntityRepository.findByUsername(userName);
+        User thisUser = UserMapper.INSTANCE.toDTO(userEntity);
+//        if (thisUser.getImage()==null && avatarUserEntityRepository.findById(userEntity.getId())!=null){
+//            thisUser.setImage("/users/avatar/"+userEntity.getId()+"/db");
+//        }
+        return thisUser;
     }
 
+    @Transactional
     public User updateUser(User user, String userName) {
-        userEntityRepository.save(UserMapper.INSTANCE.toEntity(user));
-        UserEntity userEntity =  userEntityRepository.findByFirstNameContainsIgnoreCase(userName);
+        UserEntity userEntity =  userEntityRepository.findByUsername(userName);
+
+        UserMapper.INSTANCE.toEntity(user,userEntity);
+        userEntityRepository.save(userEntity);
         return UserMapper.INSTANCE.toDTO(userEntity);
     }
 
+    @Transactional // необходимо писать если вызываем сущность из бд с картинкой в параметрах с анат @lob
     public void updateAvatar(MultipartFile image, String userName) throws IOException {
-        UserEntity userEntity =  userEntityRepository.findByFirstNameContainsIgnoreCase(userName);
+        UserEntity userEntity =  userEntityRepository.findByUsername(userName);
 
         AvatarUserEntity avatar = avatarUserEntityRepository.findById(
                 (userEntity.getId())).orElse(new AvatarUserEntity());

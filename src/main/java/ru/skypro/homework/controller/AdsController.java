@@ -45,7 +45,7 @@ public class AdsController {
 
     @GetMapping("me")
     public ResponseEntity<ResponseWrapperAds> getInfoForAds() {
-        return ResponseEntity.ok().build();
+        return ResponseEntity.ok(new ResponseWrapperAds());
     }
 
     @PatchMapping(value = "/{id}/image",consumes = MediaType.MULTIPART_FORM_DATA_VALUE)

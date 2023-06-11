@@ -5,5 +5,5 @@ import ru.skypro.homework.entity.UserEntity;
 
 public interface UserEntityRepository extends JpaRepository<UserEntity, Integer> {
 
-    UserEntity findByFirstNameContainsIgnoreCase(String userName);
+    UserEntity findByUsername(String userName);
 }

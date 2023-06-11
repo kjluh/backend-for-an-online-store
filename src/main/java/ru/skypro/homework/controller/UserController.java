@@ -9,6 +9,7 @@ import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 import ru.skypro.homework.dto.NewPassword;
+import ru.skypro.homework.dto.RegisterReq;
 import ru.skypro.homework.dto.User;
 import ru.skypro.homework.service.UserService;
 
@@ -25,13 +26,12 @@ public class UserController {
     @PostMapping("/set_password")
     public ResponseEntity updatePassword(@RequestBody NewPassword newPass, Authentication authentication) {
         userService.updatePassword(newPass, authentication.getName());
-       return ResponseEntity.ok().build();
+        return ResponseEntity.ok().build();
     }
 
     @GetMapping("/me")
     public ResponseEntity<User> getUser(Authentication authentication) {
-
-        return ResponseEntity.ok(userService.getUser(authentication));
+        return ResponseEntity.ok(userService.getUser(authentication.getName()));
     }
 
     @PatchMapping("/me")
@@ -39,13 +39,16 @@ public class UserController {
         return ResponseEntity.ok(userService.updateUser(user, authentication.getName()));
     }
 
-    @PatchMapping(value = "/me/image",consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+    @PatchMapping(value = "/me/image", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     public ResponseEntity updateAvatar(@RequestParam MultipartFile image, Authentication authentication) throws IOException {
         userService.updateAvatar(image, authentication.getName());
         return ResponseEntity.ok().build();
     }
 
 
-
-
+    //контроллер для возврата массива байт аватара пользователя
+    @GetMapping("/avatar/{id}/db")
+    public ResponseEntity<byte[]> getUserAvatar(@PathVariable Integer id) {
+        return ResponseEntity.ok(userService.getURLAvatar(id));
+    }
 }
