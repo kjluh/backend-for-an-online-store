@@ -4,10 +4,15 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 import ru.skypro.homework.dto.*;
+import ru.skypro.homework.entity.UserEntity;
 import ru.skypro.homework.service.AdsService;
+
+import java.io.IOException;
 
 @RestController
 @RequestMapping("/ads")
@@ -24,8 +29,11 @@ public class AdsController {
 
     @PostMapping(consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     public ResponseEntity<Ads> saveNewAd(@RequestPart CreateAds properties,
-                                             @RequestPart MultipartFile image) {
-        adsService.saveNewAd(properties, image);
+                                         @RequestPart MultipartFile image,
+                                         @AuthenticationPrincipal UserEntity authUser) { // Этой аннотацией получаем авторизованного юзера
+
+        adsService.saveNewAd(properties, image, authUser);
+
         return ResponseEntity.ok().build();
     }
 
