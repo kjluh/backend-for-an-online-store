@@ -1,19 +1,21 @@
 package ru.skypro.homework.controller;
 
 import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import ru.skypro.homework.dto.Comment;
 import ru.skypro.homework.dto.CreateComment;
 import ru.skypro.homework.dto.ResponseWrapperComment;
+import ru.skypro.homework.service.CommentsForAdsService;
 
 @RestController
 @RequestMapping("/ads")
-@RequiredArgsConstructor
 @CrossOrigin(value = "http://localhost:3000")
 public class CommentsForAdsController {
 
-//    private final CommentsForAdsService commentsForAdsService;
+    @Autowired
+    private CommentsForAdsService commentsForAdsService;
 
     @GetMapping("{id}/comments")
     public ResponseEntity<ResponseWrapperComment> getCom(@PathVariable int id) {

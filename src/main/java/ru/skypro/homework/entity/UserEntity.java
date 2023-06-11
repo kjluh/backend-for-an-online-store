@@ -16,6 +16,7 @@ public class UserEntity {
     /**
      * Роль пользователя
      */
+    @Enumerated(EnumType.STRING)
     private Role role;
     /**
      * Логин пользователя
@@ -25,10 +26,6 @@ public class UserEntity {
      * Пароль пользователя
      */
     private String password;
-    /**
-     * Логин пользователя
-     */
-    private String email;
     /**
      * Имя пользователя
      */
@@ -44,7 +41,7 @@ public class UserEntity {
     /**
      * Аватар пользователя
      */
-//    @OneToOne
-//    @JoinColumn(name = "avatar_user_entity_id")
-//    private AvatarUserEntity avatarUserEntity;
+    @OneToOne
+    @JoinColumn(name = "avatar_user_entity_id")
+    private AvatarUserEntity avatarUserEntity;
 }
