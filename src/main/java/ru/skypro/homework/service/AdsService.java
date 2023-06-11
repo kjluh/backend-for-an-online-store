@@ -25,13 +25,14 @@ public class AdsService {
 
     public AdsEntity saveNewAd(CreateAds newAds, MultipartFile image, UserEntity author) {
         AdsEntity adsEntity = AdsMapper.INSTANCE.CreateAdsToAdsEntity(newAds);
+        adsEntity.setAuthor(author);
+        System.out.println(author.toString());
         adsRepository.save(adsEntity);
         try {
             adsImageService.save(adsEntity, image);
         } catch (IOException e) {
             e.printStackTrace();
         }
-        adsEntity.setAuthor(author);
         return adsEntity;
     }
 
