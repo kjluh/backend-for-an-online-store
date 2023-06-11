@@ -1,13 +1,12 @@
 package ru.skypro.homework.controller;
 
-import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import ru.skypro.homework.dto.Comment;
 import ru.skypro.homework.dto.CreateComment;
 import ru.skypro.homework.dto.ResponseWrapperComment;
-import ru.skypro.homework.service.CommentsForAdsService;
+import ru.skypro.homework.service.CommentService;
 
 @RestController
 @RequestMapping("/ads")
@@ -15,7 +14,7 @@ import ru.skypro.homework.service.CommentsForAdsService;
 public class CommentsForAdsController {
 
     @Autowired
-    private CommentsForAdsService commentsForAdsService;
+    private CommentService commentService;
 
     @GetMapping("{id}/comments")
     public ResponseEntity<ResponseWrapperComment> getCom(@PathVariable int id) {
