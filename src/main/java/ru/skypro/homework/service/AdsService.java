@@ -1,38 +1,54 @@
 package ru.skypro.homework.service;
 
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
-import ru.skypro.homework.dto.Ads;
+import org.springframework.web.multipart.MultipartFile;
 import ru.skypro.homework.dto.CreateAds;
-import ru.skypro.homework.dto.FullAds;
+import ru.skypro.homework.entity.AdsEntity;
+import ru.skypro.homework.entity.AdsImage;
+import ru.skypro.homework.entity.UserEntity;
+import ru.skypro.homework.mapper.AdsMapper;
 import ru.skypro.homework.repositories.AdsRepository;
+
+import java.io.IOException;
 
 @Service
 public class AdsService {
 
     private AdsRepository adsRepository;
+    private AdsImageService adsImageService;
 
-    public AdsService(AdsRepository adsRepository) {
+    public AdsService(AdsRepository adsRepository, AdsImageService adsImageService) {
         this.adsRepository = adsRepository;
+        this.adsImageService = adsImageService;
     }
 
-
-    public FullAds save(Ads ads, String s) {
-        return null;
+    public AdsEntity saveNewAd(CreateAds newAds, MultipartFile image, UserEntity author) {
+        AdsEntity adsEntity = AdsMapper.INSTANCE.CreateAdsToAdsEntity(newAds);
+        adsEntity.setAuthor(author);
+        System.out.println(author.toString());
+        adsRepository.save(adsEntity);
+        try {
+            adsImageService.save(adsEntity, image);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return adsEntity;
     }
 
-    public FullAds findById(Long id) {
+    public AdsEntity findById(Long id) {
         return null;
     }
 
     public void delete(Long id) {
-
     }
 
     public void updateCover(Long id, String s) {
-
     }
 
-    public FullAds updateAsd(Long id, CreateAds createAds) {
+    public AdsEntity updateAsd(Long id, CreateAds createAds) {
         return null;
     }
+
+
 }
