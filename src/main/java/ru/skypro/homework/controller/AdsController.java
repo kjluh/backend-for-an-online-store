@@ -24,8 +24,8 @@ public class AdsController {
     private AdsService adsService;
 
     @GetMapping
-    public ResponseEntity<ResponseWrapperAds> getAllAds() {
-        return ResponseEntity.ok().build();
+    public ResponseEntity<ResponseWrapperAds> getAllAds(@AuthenticationPrincipal User authUser) {
+        return ResponseEntity.ok(adsService.findAllAds(authUser));
     }
 
     @PostMapping(consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
