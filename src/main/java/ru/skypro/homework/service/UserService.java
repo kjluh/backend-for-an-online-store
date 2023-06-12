@@ -2,6 +2,8 @@ package ru.skypro.homework.service;
 
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -25,27 +27,30 @@ public class UserService {
     @Autowired
     private AvatarUserEntityRepository avatarUserEntityRepository;
 
-
-    public void updatePassword(NewPassword newPass, String userName) {
+    @Transactional(readOnly = true)
+    public ResponseEntity updatePassword(NewPassword newPass, String userName) {
        UserEntity userEntity =  getUserEntity(userName);
-       userEntity.setPassword(newPass.getNewPassword());
-       userEntityRepository.save(userEntity);
+       if (userEntity.getPassword().equals(newPass.getCurrentPassword())) {
+           userEntity.setPassword(newPass.getNewPassword());
+           userEntityRepository.save(userEntity);
+           return ResponseEntity.ok().build();
+       }
+        return ResponseEntity.status(401).build();
     }
 
     @Transactional(readOnly = true)
     public User getUser(String userName) {
         UserEntity userEntity =  getUserEntity(userName);
         User thisUser = UserMapper.INSTANCE.toDTO(userEntity);
-//        if (thisUser.getImage()==null && avatarUserEntityRepository.findById(userEntity.getId())!=null){
-//            thisUser.setImage("/users/avatar/"+userEntity.getId()+"/db");
-//        }
+        if (avatarUserEntityRepository.findById(userEntity.getId())!=null && thisUser.getImage()==null){
+            thisUser.setImage("/users/avatar/"+userEntity.getAvatarUserEntity().getId()+"/db");
+        }
         return thisUser;
     }
 
     @Transactional
     public User updateUser(User user, String userName) {
         UserEntity userEntity =  getUserEntity(userName);
-
         UserMapper.INSTANCE.toEntity(user,userEntity);
         userEntityRepository.save(userEntity);
         return UserMapper.INSTANCE.toDTO(userEntity);
@@ -68,8 +73,7 @@ public class UserService {
     }
 
     public UserEntity getUserEntity(String userName){
-        UserEntity userEntity =  userEntityRepository.findByUsername(userName);
-        return userEntity;
+        return userEntityRepository.findByUsername(userName);
     }
     public byte[] getURLAvatar(Integer id){
         return avatarUserEntityRepository.findById(id).orElseThrow().getData();
