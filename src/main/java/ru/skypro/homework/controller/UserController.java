@@ -25,8 +25,7 @@ public class UserController {
 
     @PostMapping("/set_password")
     public ResponseEntity updatePassword(@RequestBody NewPassword newPass, Authentication authentication) {
-        userService.updatePassword(newPass, authentication.getName());
-        return ResponseEntity.ok().build();
+        return userService.updatePassword(newPass, authentication.getName());
     }
 
     @GetMapping("/me")
