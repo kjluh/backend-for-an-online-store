@@ -4,5 +4,5 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import ru.skypro.homework.entity.Comment;
 
 
-public interface CommentsForAdsRepository extends JpaRepository<Comment,Integer> {
+public interface CommentsForAdsRepository {//extends JpaRepository<Comment,Integer> {
 }

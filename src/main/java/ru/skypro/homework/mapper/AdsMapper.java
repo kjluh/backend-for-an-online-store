@@ -3,6 +3,7 @@ package ru.skypro.homework.mapper;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 import org.mapstruct.factory.Mappers;
+import ru.skypro.homework.dto.Ads;
 import ru.skypro.homework.dto.CreateAds;
 import ru.skypro.homework.dto.FullAds;
 import ru.skypro.homework.entity.AdsEntity;
@@ -20,4 +21,8 @@ public interface AdsMapper {
     FullAds adsEntityToFullAds(AdsEntity adsEntity, UserEntity author, AdsImage adsImage);
 
     AdsEntity CreateAdsToAdsEntity(CreateAds createAds);
+
+    @Mapping(source = "adsEntity.id", target = "pk")
+    @Mapping(source = "author.id", target = "author")
+    Ads adsEntityToAds(AdsEntity adsEntity, UserEntity author);
 }

@@ -42,6 +42,5 @@ public class UserEntity {
      * Аватар пользователя
      */
     @OneToOne
-    @JoinColumn(name = "avatar_user_entity_id")
     private AvatarUserEntity avatarUserEntity;
 }

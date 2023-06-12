@@ -12,25 +12,25 @@ import ru.skypro.homework.repositories.CommentsForAdsRepository;
 
 public class CommentsForAdsService {
 
-    @Autowired
-    private CommentsForAdsRepository commentsForAdsRepository;
-    @Autowired
-    private AdsRepository adsRepository;
-
-    public Comment save(CreateComment comment) {
-
-       return null;//commentsForAdsRepository.save(comment); //Временное решение, нужно сохранять уже нашу сущность, не ДТО
-    }
-
-    public Comment get(Integer id) {
-        return commentsForAdsRepository.findById(id).orElse(null);
-    }
-
-    public void delete(Integer id) {
-        commentsForAdsRepository.deleteById(id);
-    }
-
-    public Comment update(Long adId, Long commentsId, Comment comment) {
-        return null;
-    }
+//    @Autowired
+//    private CommentsForAdsRepository commentsForAdsRepository;
+//    @Autowired
+//    private AdsRepository adsRepository;
+//
+//    public Comment save(CreateComment comment) {
+//
+//       return null;//commentsForAdsRepository.save(comment); //Временное решение, нужно сохранять уже нашу сущность, не ДТО
+//    }
+//
+//    public Comment get(Integer id) {
+//        return commentsForAdsRepository.findById(id).orElse(null);
+//    }
+//
+//    public void delete(Integer id) {
+//        commentsForAdsRepository.deleteById(id);
+//    }
+//
+//    public Comment update(Long adId, Long commentsId, Comment comment) {
+//        return null;
+//    }
 }
