@@ -5,24 +5,46 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 import ru.skypro.homework.dto.Ads;
 import ru.skypro.homework.dto.CreateAds;
+import ru.skypro.homework.dto.ResponseWrapperAds;
 import ru.skypro.homework.entity.AdsEntity;
 import ru.skypro.homework.mapper.AdsMapper;
 import ru.skypro.homework.repositories.AdsRepository;
 
 import java.io.IOException;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.stream.Collectors;
 
 @Service
 public class AdsService {
 
-    private AdsRepository adsRepository;
-    private AdsImageService adsImageService;
-    private UserService userService;
+    final private AdsRepository adsRepository;
+    final private AdsImageService adsImageService;
+    final private UserService userService;
 
     public AdsService(AdsRepository adsRepository, AdsImageService adsImageService, UserService userService) {
         this.adsRepository = adsRepository;
         this.adsImageService = adsImageService;
         this.userService = userService;
+    }
+
+    public ResponseWrapperAds findAllAds(User author) {
+        //раскомментировать когда заработает нормальная авторизация
+        //adsEntity.setAuthor(userService.getUserEntity(author.getUsername()));
+        UserEntity user = userService.getUserEntity("user@gmail.com");
+        Collection<AdsEntity> adsEntityCollection = adsRepository.findAllByAuthor_Id(user.getId());
+
+        Collection<Ads> adsCollection= adsEntityCollection.stream().map(adsEntity -> {
+                    Ads ads = AdsMapper.INSTANCE.adsEntityToAds(adsEntity, adsEntity.getAuthor());
+                    ads.setImage("http:\\\\localhost:8080\\" + adsImageService.findByAdsId(adsEntity.getId()).getFilePath());
+                    return ads;}
+                ).collect(Collectors.toList());
+
+        ResponseWrapperAds responseWrapperAds = new ResponseWrapperAds();
+        responseWrapperAds.setCount(adsCollection.size());
+        responseWrapperAds.setResults(adsCollection);
+        return responseWrapperAds;
     }
 
     public Ads saveNewAd(CreateAds newAds, MultipartFile image, User author) {
@@ -39,7 +61,7 @@ public class AdsService {
         }
 
         Ads ads = AdsMapper.INSTANCE.adsEntityToAds(adsEntity, adsEntity.getAuthor());
-        ads.setImage(adsImageService.findByAdsId(adsEntity.getId()).getFilePath());
+        ads.setImage("http:\\\\localhost:8080\\" + adsImageService.findByAdsId(adsEntity.getId()).getFilePath());
         return ads;
     }
 
@@ -56,6 +78,5 @@ public class AdsService {
     public AdsEntity updateAsd(Long id, CreateAds createAds) {
         return null;
     }
-
 
 }
