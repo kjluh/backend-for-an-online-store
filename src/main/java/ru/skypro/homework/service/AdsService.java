@@ -8,6 +8,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.multipart.MultipartFile;
 import ru.skypro.homework.dto.Ads;
 import ru.skypro.homework.dto.CreateAds;
+import ru.skypro.homework.dto.FullAds;
 import ru.skypro.homework.dto.ResponseWrapperAds;
 import ru.skypro.homework.entity.AdsEntity;
 import ru.skypro.homework.entity.UserEntity;
@@ -67,6 +68,13 @@ public class AdsService {
         Ads ads = AdsMapper.INSTANCE.adsEntityToAds(adsEntity, adsEntity.getAuthor());
         ads.setImage("/ads/image/" + adsImageService.findByAdsId(adsEntity.getId()).getId());
         return ads;
+    }
+
+    public FullAds findFullAdsById(int id) {
+        AdsEntity adsEntity = adsRepository.findById(id).get();
+        FullAds fullAds = AdsMapper.INSTANCE.adsEntityToFullAds(adsEntity, adsEntity.getAuthor());
+        fullAds.setImage("/ads/image/" + adsImageService.findByAdsId(adsEntity.getId()).getId());
+        return fullAds;
     }
 
     public AdsEntity findById(int id) {

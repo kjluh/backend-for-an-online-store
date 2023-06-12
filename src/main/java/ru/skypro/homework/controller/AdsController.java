@@ -44,7 +44,7 @@ public class AdsController {
 
     @GetMapping("{id}")
     public ResponseEntity<FullAds> findAdsById(@PathVariable int id) {
-        return ResponseEntity.ok().build();
+        return ResponseEntity.ok(adsService.findFullAdsById(id));
     }
 
     @DeleteMapping("{id}")

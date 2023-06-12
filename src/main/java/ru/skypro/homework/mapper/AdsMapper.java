@@ -17,8 +17,8 @@ public interface AdsMapper {
     @Mapping(source = "adsEntity.id", target = "pk")
     @Mapping(source = "author.firstName", target = "authorFirstName")
     @Mapping(source = "author.lastName", target = "authorLastName")
-    @Mapping(source = "adsImage.filePath", target = "image")
-    FullAds adsEntityToFullAds(AdsEntity adsEntity, UserEntity author, AdsImage adsImage);
+    @Mapping(source = "author.username", target = "email")
+    FullAds adsEntityToFullAds(AdsEntity adsEntity, UserEntity author);
 
     AdsEntity CreateAdsToAdsEntity(CreateAds createAds);
 
