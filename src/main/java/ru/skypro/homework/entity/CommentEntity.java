@@ -33,4 +33,8 @@ public class CommentEntity {
      */
     private String text;
 
+    @ManyToOne
+    @JoinColumn(name = "ad_id")
+    private AdsEntity adsEntity;
+
 }
