@@ -12,7 +12,7 @@ import java.util.Collection;
 @Data
 public class AdsEntity {
     @Id
-    @GeneratedValue
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int id;
 
     @ManyToOne
@@ -22,9 +22,4 @@ public class AdsEntity {
     private String description;
     private int price;
     private LocalDateTime createdAt;
-
-    @OneToOne
-    @JoinColumn(name="ads")
-    private AdsImage image;
-
 }

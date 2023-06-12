@@ -27,7 +27,7 @@ public class AdsImageService {
     }
 
     public AdsImage save(AdsEntity adsEntity, MultipartFile image) throws IOException {
-        Path filePath = Path.of(adsImageDir, adsEntity + "." + getExtensions(Objects.requireNonNull(image.getOriginalFilename())));
+        Path filePath = Path.of(adsImageDir, adsEntity.getId() + "." + Objects.requireNonNull(image.getOriginalFilename()));
         Files.createDirectories(filePath.getParent());
         Files.deleteIfExists(filePath);
 
@@ -50,6 +50,9 @@ public class AdsImageService {
         return adsImageRepository.save(adsImage);
     }
 
+    public AdsImage findByAdsId(int adsId) {
+        return adsImageRepository.findAdsImagesByAds_Id(adsId);
+    }
 
     private String getExtensions(String fileName) {
         return fileName.substring(fileName.lastIndexOf(".") + 1);
