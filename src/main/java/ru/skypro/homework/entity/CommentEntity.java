@@ -20,8 +20,9 @@ public class CommentEntity {
     /**
      * Данные автора комментария
      */
-    @OneToOne
-    private UserEntity user;
+    @ManyToOne
+    @JoinColumn(name = "author_id")
+    private UserEntity author;
 
     /**
      * Время создания комментария
@@ -31,10 +32,10 @@ public class CommentEntity {
     /**
      * Текст комментария
      */
-    private String text;
+    private String commentText;
 
     @ManyToOne
-    @JoinColumn(name = "ad_id")
+    @JoinColumn(name = "ads_id")
     private AdsEntity adsEntity;
 
 }

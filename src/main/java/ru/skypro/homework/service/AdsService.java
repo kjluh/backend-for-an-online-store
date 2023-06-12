@@ -1,14 +1,11 @@
 package ru.skypro.homework.service;
 
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.core.userdetails.User;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 import ru.skypro.homework.dto.Ads;
 import ru.skypro.homework.dto.CreateAds;
 import ru.skypro.homework.entity.AdsEntity;
-import ru.skypro.homework.entity.AdsImage;
-import ru.skypro.homework.entity.UserEntity;
 import ru.skypro.homework.mapper.AdsMapper;
 import ru.skypro.homework.repositories.AdsRepository;
 
@@ -46,8 +43,8 @@ public class AdsService {
         return ads;
     }
 
-    public AdsEntity findById(Long id) {
-        return null;
+    public AdsEntity findById(int id) {
+        return adsRepository.findById(id).get();
     }
 
     public void delete(Long id) {
