@@ -11,6 +11,7 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 import ru.skypro.homework.dto.*;
 import ru.skypro.homework.entity.UserEntity;
+import ru.skypro.homework.service.AdsImageService;
 import ru.skypro.homework.service.AdsService;
 
 import java.io.IOException;
@@ -20,8 +21,13 @@ import java.io.IOException;
 @CrossOrigin(value = "http://localhost:3000")
 public class AdsController {
 
-    @Autowired
-    private AdsService adsService;
+    private final AdsService adsService;
+    private final AdsImageService adsImageService;
+
+    public AdsController(AdsService adsService, AdsImageService adsImageService) {
+        this.adsService = adsService;
+        this.adsImageService = adsImageService;
+    }
 
     @GetMapping
     public ResponseEntity<ResponseWrapperAds> getAllAds(@AuthenticationPrincipal User authUser) {
@@ -62,4 +68,10 @@ public class AdsController {
         return ResponseEntity.ok().build();
     }
 
+
+    // Эндпоит получения картинки с сервера
+    @GetMapping("/image/{id}")
+    public ResponseEntity<byte[]> getAdsImage(@PathVariable int id) {
+        return ResponseEntity.ok(adsImageService.getAdsImage(id));
+    }
 }

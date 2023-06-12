@@ -54,7 +54,7 @@ public class AdsImageService {
         return adsImageRepository.findAdsImagesByAds_Id(adsId);
     }
 
-    private String getExtensions(String fileName) {
-        return fileName.substring(fileName.lastIndexOf(".") + 1);
+    public byte[] getAdsImage(int id) {
+        return adsImageRepository.findById(id).orElseThrow().getData();
     }
 }

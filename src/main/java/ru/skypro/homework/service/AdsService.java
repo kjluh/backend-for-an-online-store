@@ -1,7 +1,10 @@
 package ru.skypro.homework.service;
 
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.userdetails.User;
 import org.springframework.stereotype.Service;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.multipart.MultipartFile;
 import ru.skypro.homework.dto.Ads;
 import ru.skypro.homework.dto.CreateAds;
@@ -38,7 +41,7 @@ public class AdsService {
 
         Collection<Ads> adsCollection= adsEntityCollection.stream().map(adsEntity -> {
                     Ads ads = AdsMapper.INSTANCE.adsEntityToAds(adsEntity, adsEntity.getAuthor());
-                    ads.setImage("http:\\\\localhost:8080\\" + adsImageService.findByAdsId(adsEntity.getId()).getFilePath());
+                    ads.setImage("/ads/image/" + adsImageService.findByAdsId(adsEntity.getId()).getId());
                     return ads;}
                 ).collect(Collectors.toList());
 
@@ -62,7 +65,7 @@ public class AdsService {
         }
 
         Ads ads = AdsMapper.INSTANCE.adsEntityToAds(adsEntity, adsEntity.getAuthor());
-        ads.setImage("http:\\\\localhost:8080\\" + adsImageService.findByAdsId(adsEntity.getId()).getFilePath());
+        ads.setImage("/ads/image/" + adsImageService.findByAdsId(adsEntity.getId()).getId());
         return ads;
     }
 
