@@ -2,6 +2,7 @@ package ru.skypro.homework.service;
 
 import org.springframework.stereotype.Service;
 import ru.skypro.homework.dto.Comment;
+import ru.skypro.homework.dto.CreateComment;
 import ru.skypro.homework.dto.ResponseWrapperComment;
 import ru.skypro.homework.entity.CommentEntity;
 import ru.skypro.homework.mapper.CommentMapper;
@@ -45,9 +46,9 @@ public class CommentService {
         return responseWrapperComment;
     }
 
-    public Comment createNewAdsComment(int adId, String commentText) {
+    public Comment createNewAdsComment(int adId, CreateComment commentText) {
         CommentEntity commentEntity = new CommentEntity();
-        commentEntity.setCommentText(commentText);
+        commentEntity.setCommentText(commentText.toString());
         commentEntity.setCreateTime(LocalDateTime.now());
         commentEntity.setAuthor(userService.getUserEntity("user@gmail.com"));
         commentEntity.setAdsEntity(adsService.findById(adId));
@@ -63,9 +64,13 @@ public class CommentService {
 
     public Comment patchCommentByAdsIdAndCommentEntityId(int adId, int id, Comment comment) {
         comment.setPk(id);
+        comment.setCreatedAt(LocalDateTime.now(ZoneOffset.UTC).toInstant(ZoneOffset.UTC).toEpochMilli());
+        System.out.println("1 - " + comment);
 
         CommentEntity commentEntity = CommentMapper.INSTANCE.commentToCommentEntity(comment);
         commentEntity.setCreateTime(Instant.ofEpochMilli(comment.getCreatedAt()).atZone(ZoneId.systemDefault()).toLocalDateTime());
+        System.out.println("2 - " + commentEntity);
+
         commentEntity.setAdsEntity(adsService.findById(adId));
 
         commentRepository.save(commentEntity);

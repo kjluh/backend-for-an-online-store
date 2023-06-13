@@ -4,10 +4,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import ru.skypro.homework.dto.Comment;
+import ru.skypro.homework.dto.CreateComment;
 import ru.skypro.homework.dto.ResponseWrapperComment;
 import ru.skypro.homework.service.CommentService;
-
-import java.util.List;
 
 @RestController
 @RequestMapping("/ads")
@@ -23,7 +22,7 @@ public class CommentsController {
     }
 
     @PostMapping("{id}/comments")
-    public ResponseEntity<Comment> saveCom(@PathVariable int id, @RequestBody String text) {
+    public ResponseEntity<Comment> saveCom(@PathVariable int id, @RequestBody CreateComment text) {
         return ResponseEntity.ok(commentService.createNewAdsComment(id, text));
     }
 
