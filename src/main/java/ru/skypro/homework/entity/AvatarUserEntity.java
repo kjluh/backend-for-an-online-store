@@ -16,6 +16,6 @@ public class AvatarUserEntity {
     @Lob
     private byte[] data;
 
-    @OneToOne
+    @OneToOne(mappedBy = "avatarUserEntity")
     private UserEntity userEntity;
 }
