@@ -57,4 +57,8 @@ public class AdsImageService {
     public byte[] getAdsImage(int id) {
         return adsImageRepository.findById(id).orElseThrow().getData();
     }
+
+    public void deleteByAdsId(int adsId) {
+        adsImageRepository.deleteAdsImagesByAds_Id(adsId);
+    }
 }
