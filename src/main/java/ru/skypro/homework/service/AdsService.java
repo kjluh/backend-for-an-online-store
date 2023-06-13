@@ -34,17 +34,24 @@ public class AdsService {
         this.userService = userService;
     }
 
-    public ResponseWrapperAds findAllAds(User author) {
+    public ResponseWrapperAds findAllAds() {
+        Collection<AdsEntity> adsEntityCollection = adsRepository.findAll();
+
+        Collection<Ads> adsCollection = adsEntityCollectionToAdsCollection(adsEntityCollection);
+
+        ResponseWrapperAds responseWrapperAds = new ResponseWrapperAds();
+        responseWrapperAds.setCount(adsCollection.size());
+        responseWrapperAds.setResults(adsCollection);
+        return responseWrapperAds;
+    }
+
+    public ResponseWrapperAds findAuthorizedUserAds(User author) {
         //раскомментировать когда заработает нормальная авторизация
         //adsEntity.setAuthor(userService.getUserEntity(author.getUsername()));
         UserEntity user = userService.getUserEntity("user@gmail.com");
         Collection<AdsEntity> adsEntityCollection = adsRepository.findAllByAuthor_Id(user.getId());
 
-        Collection<Ads> adsCollection= adsEntityCollection.stream().map(adsEntity -> {
-                    Ads ads = AdsMapper.INSTANCE.adsEntityToAds(adsEntity, adsEntity.getAuthor());
-                    ads.setImage("/ads/image/" + adsImageService.findByAdsId(adsEntity.getId()).getId());
-                    return ads;}
-                ).collect(Collectors.toList());
+        Collection<Ads> adsCollection = adsEntityCollectionToAdsCollection(adsEntityCollection);
 
         ResponseWrapperAds responseWrapperAds = new ResponseWrapperAds();
         responseWrapperAds.setCount(adsCollection.size());
@@ -81,6 +88,7 @@ public class AdsService {
         return adsRepository.findById(id).get();
     }
 
+
     public void delete(Long id) {
     }
 
@@ -89,6 +97,14 @@ public class AdsService {
 
     public AdsEntity updateAsd(Long id, CreateAds createAds) {
         return null;
+    }
+
+    private Collection<Ads> adsEntityCollectionToAdsCollection(Collection<AdsEntity> adsEntityCollection) {
+        return adsEntityCollection.stream().map(adsEntity -> {
+            Ads ads = AdsMapper.INSTANCE.adsEntityToAds(adsEntity, adsEntity.getAuthor());
+            ads.setImage("/ads/image/" + adsImageService.findByAdsId(adsEntity.getId()).getId());
+            return ads;}
+        ).collect(Collectors.toList());
     }
 
 }

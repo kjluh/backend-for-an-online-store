@@ -4,6 +4,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import ru.skypro.homework.dto.Comment;
+import ru.skypro.homework.dto.ResponseWrapperComment;
 import ru.skypro.homework.service.CommentService;
 
 import java.util.List;
@@ -17,7 +18,7 @@ public class CommentsController {
     private CommentService commentService;
 
     @GetMapping("{id}/comments")
-    public ResponseEntity<List<Comment>> getCom(@PathVariable int id) {
+    public ResponseEntity<ResponseWrapperComment> getCom(@PathVariable int id) {
         return ResponseEntity.ok(commentService.getAllCommentsByAdsId(id));
     }
 

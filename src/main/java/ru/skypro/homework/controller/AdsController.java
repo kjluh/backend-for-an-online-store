@@ -30,8 +30,8 @@ public class AdsController {
     }
 
     @GetMapping
-    public ResponseEntity<ResponseWrapperAds> getAllAds(@AuthenticationPrincipal User authUser) {
-        return ResponseEntity.ok(adsService.findAllAds(authUser));
+    public ResponseEntity<ResponseWrapperAds> getAllAds() {
+        return ResponseEntity.ok(adsService.findAllAds());
     }
 
     @PostMapping(consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
@@ -58,8 +58,8 @@ public class AdsController {
     }
 
     @GetMapping("me")
-    public ResponseEntity<ResponseWrapperAds> getInfoForAds() {
-        return ResponseEntity.ok(new ResponseWrapperAds());
+    public ResponseEntity<ResponseWrapperAds> getAuthorizedUserAds(@AuthenticationPrincipal User authUser) {
+        return ResponseEntity.ok(adsService.findAuthorizedUserAds(authUser));
     }
 
     @PatchMapping(value = "/{id}/image",consumes = MediaType.MULTIPART_FORM_DATA_VALUE)

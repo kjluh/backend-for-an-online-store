@@ -2,6 +2,7 @@ package ru.skypro.homework.service;
 
 import org.springframework.stereotype.Service;
 import ru.skypro.homework.dto.Comment;
+import ru.skypro.homework.dto.ResponseWrapperComment;
 import ru.skypro.homework.entity.CommentEntity;
 import ru.skypro.homework.mapper.CommentMapper;
 import ru.skypro.homework.repositories.CommentRepository;
@@ -27,7 +28,7 @@ public class CommentService {
         this.adsService = adsService;
     }
 
-    public List<Comment> getAllCommentsByAdsId(int adId) {
+    public ResponseWrapperComment getAllCommentsByAdsId(int adId) {
         List<CommentEntity> commentEntityList = new ArrayList<>();
         commentEntityList.addAll(commentRepository.findCommentEntitiesByAdsEntity_Id(adId));
 
@@ -38,7 +39,10 @@ public class CommentService {
             commentDtoList.add(thisComment);
         }
 
-        return commentDtoList;
+        ResponseWrapperComment responseWrapperComment = new ResponseWrapperComment();
+        responseWrapperComment.setCount(commentDtoList.size());
+        responseWrapperComment.setResults(commentDtoList);
+        return responseWrapperComment;
     }
 
     public Comment createNewAdsComment(int adId, String commentText) {
