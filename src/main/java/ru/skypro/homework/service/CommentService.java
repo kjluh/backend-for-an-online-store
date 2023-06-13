@@ -33,8 +33,8 @@ public class CommentService {
 
         List<Comment> commentDtoList = new ArrayList<>();
 
-        for (int i = 0; i < commentEntityList.size()+1; i++) {
-            Comment thisComment = CommentMapper.INSTANCE.commentEntityToComment(commentEntityList.get(i));
+        for (CommentEntity commentEntity: commentEntityList) {
+            Comment thisComment = CommentMapper.INSTANCE.commentEntityToComment(commentEntity);
             commentDtoList.add(thisComment);
         }
 
