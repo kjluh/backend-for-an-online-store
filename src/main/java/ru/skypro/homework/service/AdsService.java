@@ -3,6 +3,7 @@ package ru.skypro.homework.service;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.userdetails.User;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.multipart.MultipartFile;
@@ -59,6 +60,7 @@ public class AdsService {
         return responseWrapperAds;
     }
 
+
     public Ads saveNewAd(CreateAds newAds, MultipartFile image, User author) {
         AdsEntity adsEntity = AdsMapper.INSTANCE.CreateAdsToAdsEntity(newAds);
         //раскомментировать когда заработает нормальная авторизация
@@ -90,6 +92,7 @@ public class AdsService {
 
 
     public void delete(int id) {
+        adsImageService.deleteByAdsId(id);
         adsRepository.deleteById(id);
     }
 
