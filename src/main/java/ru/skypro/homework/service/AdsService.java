@@ -89,14 +89,17 @@ public class AdsService {
     }
 
 
-    public void delete(Long id) {
+    public void delete(int id) {
+        adsRepository.deleteById(id);
+    }
+
+    public Ads updateAds(int id, CreateAds createAds) {
+        AdsEntity adsEntity = adsRepository.findById(id).get();
+        adsEntity = AdsMapper.INSTANCE.CreateAdsToAdsEntity(createAds);
+        return AdsMapper.INSTANCE.adsEntityToAds(adsRepository.save(adsEntity), adsEntity.getAuthor());
     }
 
     public void updateCover(Long id, String s) {
-    }
-
-    public AdsEntity updateAsd(Long id, CreateAds createAds) {
-        return null;
     }
 
     private Collection<Ads> adsEntityCollectionToAdsCollection(Collection<AdsEntity> adsEntityCollection) {
