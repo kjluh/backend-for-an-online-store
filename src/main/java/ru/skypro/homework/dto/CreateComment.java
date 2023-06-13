@@ -6,4 +6,9 @@ import lombok.Data;
 public class CreateComment {
 
     private String text;
+
+    @Override
+    public String toString() {
+        return text;
+    }
 }

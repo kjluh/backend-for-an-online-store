@@ -65,11 +65,13 @@ public class CommentService {
     public Comment patchCommentByAdsIdAndCommentEntityId(int adId, int id, Comment comment) {
         comment.setPk(id);
         comment.setCreatedAt(LocalDateTime.now(ZoneOffset.UTC).toInstant(ZoneOffset.UTC).toEpochMilli());
-        System.out.println("1 - " + comment);
+        comment.setAuthor(userService.getUserEntity("user@gmail.com").getId());
+        comment.setAuthorFirstName(userService.getUserEntity("user@gmail.com").getFirstName());
+        comment.setAuthorImage("test");
 
         CommentEntity commentEntity = CommentMapper.INSTANCE.commentToCommentEntity(comment);
+
         commentEntity.setCreateTime(Instant.ofEpochMilli(comment.getCreatedAt()).atZone(ZoneId.systemDefault()).toLocalDateTime());
-        System.out.println("2 - " + commentEntity);
 
         commentEntity.setAdsEntity(adsService.findById(adId));
 
