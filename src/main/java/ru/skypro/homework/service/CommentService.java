@@ -33,7 +33,7 @@ public class CommentService {
 
         List<Comment> commentDtoList = new ArrayList<>();
 
-        for (int i = 0; i < commentEntityList.size()+1; i++) {
+        for (int i = 0; i < commentEntityList.size() + 1; i++) {
             Comment thisComment = CommentMapper.INSTANCE.commentEntityToComment(commentEntityList.get(i));
             commentDtoList.add(thisComment);
         }
@@ -53,6 +53,7 @@ public class CommentService {
         newComment.setCreatedAt(LocalDateTime.now(ZoneOffset.UTC).toInstant(ZoneOffset.UTC).toEpochMilli());
         return newComment;
     }
+
     public void deleteCommentByAdsIdAndCommentEntityId(int adId, int id) {
         commentRepository.deleteCommentEntityByIdAndAdsEntity_Id(adId, id);
     }
