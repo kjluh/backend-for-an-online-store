@@ -100,12 +100,13 @@ public class AdsService {
 
     public Ads updateAds(int id, CreateAds createAds) {
         AdsEntity adsEntity = adsRepository.findById(id).get();
-        adsEntity = AdsMapper.INSTANCE.CreateAdsToAdsEntity(createAds);
+        AdsEntity newAdsEntity = AdsMapper.INSTANCE.CreateAdsToAdsEntity(createAds);
+        adsEntity.setDescription(newAdsEntity.getDescription());
+        adsEntity.setTitle(newAdsEntity.getTitle());
+        adsEntity.setPrice(newAdsEntity.getPrice());
         return AdsMapper.INSTANCE.adsEntityToAds(adsRepository.save(adsEntity), adsEntity.getAuthor());
     }
 
-    public void updateCover(Long id, String s) {
-    }
 
     private Collection<Ads> adsEntityCollectionToAdsCollection(Collection<AdsEntity> adsEntityCollection) {
         return adsEntityCollection.stream().map(adsEntity -> {

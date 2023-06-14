@@ -12,6 +12,7 @@ import ru.skypro.homework.repositories.AdsImageRepository;
 import java.io.*;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.util.ArrayList;
 import java.util.Objects;
 
 import static java.nio.file.StandardOpenOption.CREATE_NEW;
@@ -29,29 +30,17 @@ public class AdsImageService {
 
     @Transactional
     public AdsImage save(AdsEntity adsEntity, MultipartFile image) throws IOException {
-        Path filePath = Path.of(adsImageDir, adsEntity.getId() + "." + Objects.requireNonNull(image.getOriginalFilename()));
+        Path filePath = Path.of(adsImageDir, Math.random() + "." + Objects.requireNonNull(image.getOriginalFilename()));
         Files.createDirectories(filePath.getParent());
         Files.deleteIfExists(filePath);
 
-        try (
-                InputStream is = image.getInputStream();
-                OutputStream os = Files.newOutputStream(filePath, CREATE_NEW);
-                BufferedInputStream bis = new BufferedInputStream(is, 1024);
-                BufferedOutputStream bos = new BufferedOutputStream(os, 1024)
-        ) {
-            bis.transferTo(bos);
-        }
+        AdsImage adsImage = saveToFolder(filePath, image);
 
-        AdsImage adsImage = new AdsImage();
         adsImage.setAds(adsEntity);
-        adsImage.setFilePath(filePath.toString());
-        adsImage.setFileSize(image.getSize());
-        adsImage.setContentType(image.getContentType());
-        adsImage.setData(image.getBytes());
 
         return adsImageRepository.save(adsImage);
     }
-@Transactional
+    @Transactional
     public AdsImage findByAdsId(int adsId) {
         return adsImageRepository.findAdsImagesByAds_Id(adsId);
     }
@@ -62,7 +51,57 @@ public class AdsImageService {
     }
 
     @Transactional
+    public ArrayList<String> updateCover(int id, MultipartFile image) {
+        AdsImage adsImage;
+        if (adsImageRepository.findById(id).isEmpty()) {
+            adsImage = new AdsImage();
+            try {
+                Path filePath = Path.of(adsImageDir, Math.random() + "." + Objects.requireNonNull(image.getOriginalFilename()));
+                Files.createDirectories(filePath.getParent());
+                Files.deleteIfExists(filePath);
+                adsImage.setFilePath(filePath.toString());
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+
+        }
+        adsImage = adsImageRepository.findById(id).get();
+
+        try {
+            AdsImage newAdsImage = saveToFolder(Path.of(adsImageDir, Math.random() + "." + Objects.requireNonNull(image.getOriginalFilename())), image);
+            adsImage.setData(newAdsImage.getData());
+            adsImage.setContentType(newAdsImage.getContentType());
+            adsImage.setFileSize(newAdsImage.getFileSize());
+            adsImage.setFilePath(newAdsImage.getFilePath());
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+        ArrayList<String> stringArrayList = new ArrayList<>();
+        stringArrayList.add("/ads/image/" + adsImage.getFilePath());
+        return stringArrayList;
+    }
+
+    @Transactional
     public void deleteByAdsId(int adsId) {
         adsImageRepository.deleteAdsImagesByAds_Id(adsId);
+    }
+
+    private AdsImage saveToFolder(Path filePath, MultipartFile image) throws IOException {
+        try (
+                InputStream is = image.getInputStream();
+                OutputStream os = Files.newOutputStream(filePath, CREATE_NEW);
+                BufferedInputStream bis = new BufferedInputStream(is, 1024);
+                BufferedOutputStream bos = new BufferedOutputStream(os, 1024)
+        ) {
+            bis.transferTo(bos);
+        }
+
+        AdsImage adsImage = new AdsImage();
+        adsImage.setFilePath(filePath.toString());
+        adsImage.setFileSize(image.getSize());
+        adsImage.setContentType(image.getContentType());
+        adsImage.setData(image.getBytes());
+        return  adsImage;
     }
 }

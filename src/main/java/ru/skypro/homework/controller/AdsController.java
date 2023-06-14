@@ -15,6 +15,7 @@ import ru.skypro.homework.service.AdsImageService;
 import ru.skypro.homework.service.AdsService;
 
 import java.io.IOException;
+import java.util.ArrayList;
 
 @RestController
 @RequestMapping("/ads")
@@ -63,9 +64,9 @@ public class AdsController {
     }
 
     @PatchMapping(value = "/{id}/image",consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
-    public ResponseEntity<?> updateAvatar(@PathVariable int id, @RequestPart MultipartFile image) {
+    public ResponseEntity<ArrayList<String>> updateAvatar(@PathVariable int id, @RequestPart MultipartFile image) {
         // Обновление аватарки
-        return ResponseEntity.ok().build();
+        return ResponseEntity.ok(adsImageService.updateCover(id, image));
     }
 
 
