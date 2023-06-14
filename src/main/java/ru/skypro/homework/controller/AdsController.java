@@ -71,7 +71,7 @@ public class AdsController {
 
     // Эндпоит получения картинки с сервера
     @GetMapping("/image/{id}")
-    public ResponseEntity<byte[]> getAdsImage(@PathVariable int id) {
+    public ResponseEntity<byte[]> getAdsImage(@PathVariable Integer id) {
         return ResponseEntity.ok(adsImageService.getAdsImage(id));
     }
 }

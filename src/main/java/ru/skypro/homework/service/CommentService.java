@@ -1,6 +1,7 @@
 package ru.skypro.homework.service;
 
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import ru.skypro.homework.dto.Comment;
 import ru.skypro.homework.dto.CreateComment;
 import ru.skypro.homework.dto.ResponseWrapperComment;
@@ -28,7 +29,7 @@ public class CommentService {
         this.userService = userService;
         this.adsService = adsService;
     }
-
+@Transactional
     public ResponseWrapperComment getAllCommentsByAdsId(int adId) {
         List<CommentEntity> commentEntityList = new ArrayList<>();
         commentEntityList.addAll(commentRepository.findCommentEntitiesByAdsEntity_Id(adId));
@@ -45,7 +46,7 @@ public class CommentService {
         responseWrapperComment.setResults(commentDtoList);
         return responseWrapperComment;
     }
-
+@Transactional
     public Comment createNewAdsComment(int adId, CreateComment commentText) {
         CommentEntity commentEntity = new CommentEntity();
         commentEntity.setCommentText(commentText.toString());
@@ -58,8 +59,9 @@ public class CommentService {
         newComment.setCreatedAt(LocalDateTime.now(ZoneOffset.UTC).toInstant(ZoneOffset.UTC).toEpochMilli());
         return newComment;
     }
+@Transactional
     public void deleteCommentByAdsIdAndCommentEntityId(int adId, int id) {
-        commentRepository.deleteCommentEntityByIdAndAdsEntity_Id(adId, id);
+        commentRepository.deleteCommentEntityByAdsEntity_IdAndId(adId, id);
     }
 
     public Comment patchCommentByAdsIdAndCommentEntityId(int adId, int id, Comment comment) {

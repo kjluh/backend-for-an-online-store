@@ -12,6 +12,8 @@ public interface CommentRepository extends JpaRepository<CommentEntity,Integer> 
 
     CommentEntity findCommentEntityByAdsEntity_Id(int adId);
 
-    void deleteCommentEntityByIdAndAdsEntity_Id(int adId, int id);
+
+    void deleteCommentEntityByAdsEntity_IdAndId(int adId, int id);
+
 
 }

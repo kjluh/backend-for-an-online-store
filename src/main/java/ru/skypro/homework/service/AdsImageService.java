@@ -2,6 +2,7 @@ package ru.skypro.homework.service;
 
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 import ru.skypro.homework.dto.CreateAds;
 import ru.skypro.homework.entity.AdsEntity;
@@ -26,6 +27,7 @@ public class AdsImageService {
         this.adsImageRepository = adsImageRepository;
     }
 
+    @Transactional
     public AdsImage save(AdsEntity adsEntity, MultipartFile image) throws IOException {
         Path filePath = Path.of(adsImageDir, adsEntity.getId() + "." + Objects.requireNonNull(image.getOriginalFilename()));
         Files.createDirectories(filePath.getParent());
@@ -49,15 +51,17 @@ public class AdsImageService {
 
         return adsImageRepository.save(adsImage);
     }
-
+@Transactional
     public AdsImage findByAdsId(int adsId) {
         return adsImageRepository.findAdsImagesByAds_Id(adsId);
     }
 
+    @Transactional(readOnly = true)
     public byte[] getAdsImage(int id) {
         return adsImageRepository.findById(id).orElseThrow().getData();
     }
 
+    @Transactional
     public void deleteByAdsId(int adsId) {
         adsImageRepository.deleteAdsImagesByAds_Id(adsId);
     }
