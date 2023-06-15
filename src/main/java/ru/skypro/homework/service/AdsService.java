@@ -34,7 +34,7 @@ public class AdsService {
         this.adsImageService = adsImageService;
         this.userService = userService;
     }
-    @Transactional
+
     public ResponseWrapperAds findAllAds() {
         Collection<AdsEntity> adsEntityCollection = adsRepository.findAll();
 
@@ -45,7 +45,7 @@ public class AdsService {
         responseWrapperAds.setResults(adsCollection);
         return responseWrapperAds;
     }
-@Transactional
+
     public ResponseWrapperAds findAuthorizedUserAds(User author) {
         //раскомментировать когда заработает нормальная авторизация
         //adsEntity.setAuthor(userService.getUserEntity(author.getUsername()));
@@ -60,7 +60,7 @@ public class AdsService {
         return responseWrapperAds;
     }
 
-    @Transactional
+
     public Ads saveNewAd(CreateAds newAds, MultipartFile image, User author) {
         AdsEntity adsEntity = AdsMapper.INSTANCE.CreateAdsToAdsEntity(newAds);
         //раскомментировать когда заработает нормальная авторизация
@@ -78,7 +78,7 @@ public class AdsService {
         ads.setImage("/ads/image/" + adsImageService.findByAdsId(adsEntity.getId()).getId());
         return ads;
     }
-@Transactional
+
     public FullAds findFullAdsById(int id) {
         AdsEntity adsEntity = adsRepository.findById(id).get();
         FullAds fullAds = AdsMapper.INSTANCE.adsEntityToFullAds(adsEntity, adsEntity.getAuthor());
