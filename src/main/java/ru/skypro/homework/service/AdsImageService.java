@@ -64,9 +64,9 @@ public class AdsImageService {
                 e.printStackTrace();
             }
 
+        } else {
+            adsImage = adsImageRepository.findById(id).get();
         }
-        adsImage = adsImageRepository.findById(id).get();
-
         try {
             AdsImage newAdsImage = saveToFolder(Path.of(adsImageDir, Math.random() + "." + Objects.requireNonNull(image.getOriginalFilename())), image);
             adsImage.setData(newAdsImage.getData());
