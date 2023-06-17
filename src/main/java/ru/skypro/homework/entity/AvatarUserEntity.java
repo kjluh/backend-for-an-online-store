@@ -10,8 +10,6 @@ public class AvatarUserEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int id;
-    private String filePath;
-    private long fileSize;
     private String mediaType;
     @Lob
     private byte[] data;

@@ -25,11 +25,14 @@ import java.io.*;
 @Service
 public class UserService {
 
-    @Autowired
-    private UserEntityRepository userEntityRepository;
+    private final UserEntityRepository userEntityRepository;
 
-    @Autowired
-    private AvatarUserEntityRepository avatarUserEntityRepository;
+    private final AvatarUserEntityRepository avatarUserEntityRepository;
+
+    public UserService(UserEntityRepository userEntityRepository, AvatarUserEntityRepository avatarUserEntityRepository) {
+        this.userEntityRepository = userEntityRepository;
+        this.avatarUserEntityRepository = avatarUserEntityRepository;
+    }
 
     /**
      * Обновление пароля
@@ -38,14 +41,14 @@ public class UserService {
      * @return возвращает статус по смене 200 - ок, 401 ошибка
      */
     @Transactional(readOnly = true)
-    public ResponseEntity updatePassword(NewPassword newPass, String userName) {
+    public boolean updatePassword(NewPassword newPass, String userName) {
         UserEntity userEntity = getUserEntity(userName);
         if (userEntity.getPassword().equals(newPass.getCurrentPassword())) {
             userEntity.setPassword(newPass.getNewPassword());
             userEntityRepository.save(userEntity);
-            return ResponseEntity.ok().build();
+            return true;
         }
-        return ResponseEntity.status(401).build();
+        return false;
     }
 
     /**
@@ -92,8 +95,6 @@ public class UserService {
         AvatarUserEntity avatar = avatarUserEntityRepository.findById(
                 (userEntity.getId())).orElse(new AvatarUserEntity());
         avatar.setUserEntity(userEntity);
-        avatar.setFilePath(String.valueOf(userEntity.getId()));
-        avatar.setFileSize(image.getSize());
         avatar.setMediaType(image.getContentType());
         avatar.setData(image.getBytes());
         avatarUserEntityRepository.save(avatar);

@@ -20,12 +20,18 @@ import java.io.IOException;
 @CrossOrigin(value = "http://localhost:3000")
 public class UserController {
 
-    @Autowired
-    private UserService userService;
+    private final UserService userService;
+
+    public UserController(UserService userService) {
+        this.userService = userService;
+    }
 
     @PostMapping("/set_password")
     public ResponseEntity updatePassword(@RequestBody NewPassword newPass, Authentication authentication) {
-        return userService.updatePassword(newPass, authentication.getName());
+        if (userService.updatePassword(newPass, authentication.getName())){
+            ResponseEntity.ok().build();
+        }
+        return ResponseEntity.status(401).build();
     }
 
     @GetMapping("/me")
