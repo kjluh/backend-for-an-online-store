@@ -1,6 +1,5 @@
 package ru.skypro.homework.controller;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import ru.skypro.homework.dto.Comment;
@@ -13,8 +12,11 @@ import ru.skypro.homework.service.CommentService;
 @CrossOrigin(value = "http://localhost:3000")
 public class CommentsController {
 
-    @Autowired
-    private CommentService commentService;
+    private final CommentService commentService;
+
+    public CommentsController(CommentService commentService) {
+        this.commentService = commentService;
+    }
 
     @GetMapping("{id}/comments")
     public ResponseEntity<ResponseWrapperComment> getCom(@PathVariable int id) {

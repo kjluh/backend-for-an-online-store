@@ -38,6 +38,7 @@ public class CommentService {
 
         for (CommentEntity commentEntity: commentEntityList) {
             Comment thisComment = CommentMapper.INSTANCE.commentEntityToComment(commentEntity);
+            thisComment.setAuthorImage("/users/avatar/" + userService.getUserEntity("user@gmail.com").getId() + "/db");
             commentDtoList.add(thisComment);
         }
 
@@ -56,7 +57,8 @@ public class CommentService {
         commentRepository.save(commentEntity);
 
         Comment newComment = CommentMapper.INSTANCE.commentEntityToComment(commentEntity);
-        newComment.setCreatedAt(LocalDateTime.now(ZoneOffset.UTC).toInstant(ZoneOffset.UTC).toEpochMilli());
+        newComment.setCreatedAt(commentEntity.getCreateTime().toInstant(ZoneOffset.UTC).toEpochMilli());
+    System.out.println(" sa " + newComment.getCreatedAt());
         return newComment;
     }
 @Transactional
@@ -69,7 +71,7 @@ public class CommentService {
         comment.setCreatedAt(LocalDateTime.now(ZoneOffset.UTC).toInstant(ZoneOffset.UTC).toEpochMilli());
         comment.setAuthor(userService.getUserEntity("user@gmail.com").getId());
         comment.setAuthorFirstName(userService.getUserEntity("user@gmail.com").getFirstName());
-        comment.setAuthorImage("test");
+        comment.setAuthorImage("/users/avatar/" + userService.getUserEntity("user@gmail.com").getId() + "/db");
 
         CommentEntity commentEntity = CommentMapper.INSTANCE.commentToCommentEntity(comment);
 
