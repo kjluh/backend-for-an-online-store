@@ -7,7 +7,6 @@ import ru.skypro.homework.dto.Ads;
 import ru.skypro.homework.dto.CreateAds;
 import ru.skypro.homework.dto.FullAds;
 import ru.skypro.homework.entity.AdsEntity;
-import ru.skypro.homework.entity.AdsImage;
 import ru.skypro.homework.entity.UserEntity;
 
 @Mapper
@@ -20,7 +19,7 @@ public interface AdsMapper {
     @Mapping(source = "author.username", target = "email")
     FullAds adsEntityToFullAds(AdsEntity adsEntity, UserEntity author);
 
-    AdsEntity CreateAdsToAdsEntity(CreateAds createAds);
+    AdsEntity createAdsToAdsEntity(CreateAds createAds);
 
     @Mapping(source = "adsEntity.id", target = "pk")
     @Mapping(source = "author.id", target = "author")

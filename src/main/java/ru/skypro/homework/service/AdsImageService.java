@@ -9,10 +9,14 @@ import ru.skypro.homework.entity.AdsEntity;
 import ru.skypro.homework.entity.AdsImage;
 import ru.skypro.homework.repositories.AdsImageRepository;
 
+import javax.imageio.ImageIO;
+import java.awt.image.BufferedImage;
 import java.io.*;
+import java.net.URL;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.ArrayList;
+import java.util.NoSuchElementException;
 import java.util.Objects;
 
 import static java.nio.file.StandardOpenOption.CREATE_NEW;
@@ -22,7 +26,7 @@ public class AdsImageService {
     @Value("adsImages")
     private String adsImageDir;
 
-    AdsImageRepository adsImageRepository;
+    private final AdsImageRepository adsImageRepository;
 
     AdsImageService(AdsImageRepository adsImageRepository) {
         this.adsImageRepository = adsImageRepository;
@@ -46,8 +50,29 @@ public class AdsImageService {
     }
 
     @Transactional(readOnly = true)
-    public byte[] getAdsImage(int id) {
-        return adsImageRepository.findById(id).orElseThrow().getData();
+    public byte[] getAdsImage(int id) throws IOException {
+        AdsImage adsImage;
+        byte [] data = null;
+        if (adsImageRepository.findById(id).isPresent()) {
+            adsImage = adsImageRepository.findById(id).get();
+        } else {
+            adsImage = new AdsImage();
+        }
+        try {
+                InputStream is = Files.newInputStream(Path.of(adsImage.getFilePath()));//открываем поток из файла
+                ByteArrayOutputStream os = new ByteArrayOutputStream();//создаем выходной поток
+                byte[] buffer = new byte[1024];//устанавливаем размер буфера для потока
+                int n = 0;
+                while (-1 != (n = is.read(buffer))) { //пока во входящем потоке есть данные
+                    os.write(buffer, 0, n); // записываем их в выходной поток
+                }
+                is.close(); // закрываем поток
+                data = os.toByteArray(); // перегоняем байты в переменную
+                return data;
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return data;
     }
 
     @Transactional
@@ -69,7 +94,7 @@ public class AdsImageService {
         }
         try {
             AdsImage newAdsImage = saveToFolder(Path.of(adsImageDir, Math.random() + "." + Objects.requireNonNull(image.getOriginalFilename())), image);
-            adsImage.setData(newAdsImage.getData());
+            //adsImage.setData(newAdsImage.getData());
             adsImage.setContentType(newAdsImage.getContentType());
             adsImage.setFileSize(newAdsImage.getFileSize());
             adsImage.setFilePath(newAdsImage.getFilePath());
@@ -101,7 +126,7 @@ public class AdsImageService {
         adsImage.setFilePath(filePath.toString());
         adsImage.setFileSize(image.getSize());
         adsImage.setContentType(image.getContentType());
-        adsImage.setData(image.getBytes());
+        //adsImage.setData(image.getBytes());
         return  adsImage;
     }
 }
