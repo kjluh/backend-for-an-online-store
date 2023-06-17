@@ -1,11 +1,7 @@
 package ru.skypro.homework.service;
 
-import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.userdetails.User;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.multipart.MultipartFile;
 import ru.skypro.homework.dto.Ads;
 import ru.skypro.homework.dto.CreateAds;
@@ -18,7 +14,6 @@ import ru.skypro.homework.repositories.AdsRepository;
 
 import java.io.IOException;
 import java.time.LocalDateTime;
-import java.util.ArrayList;
 import java.util.Collection;
 import java.util.stream.Collectors;
 
@@ -62,7 +57,7 @@ public class AdsService {
 
 
     public Ads saveNewAd(CreateAds newAds, MultipartFile image, User author) {
-        AdsEntity adsEntity = AdsMapper.INSTANCE.CreateAdsToAdsEntity(newAds);
+        AdsEntity adsEntity = AdsMapper.INSTANCE.createAdsToAdsEntity(newAds);
         //раскомментировать когда заработает нормальная авторизация
         //adsEntity.setAuthor(userService.getUserEntity(author.getUsername()));
         adsEntity.setAuthor(userService.getUserEntity("user@gmail.com"));
@@ -100,7 +95,7 @@ public class AdsService {
 
     public Ads updateAds(int id, CreateAds createAds) {
         AdsEntity adsEntity = adsRepository.findById(id).get();
-        AdsEntity newAdsEntity = AdsMapper.INSTANCE.CreateAdsToAdsEntity(createAds);
+        AdsEntity newAdsEntity = AdsMapper.INSTANCE.createAdsToAdsEntity(createAds);
         adsEntity.setDescription(newAdsEntity.getDescription());
         adsEntity.setTitle(newAdsEntity.getTitle());
         adsEntity.setPrice(newAdsEntity.getPrice());

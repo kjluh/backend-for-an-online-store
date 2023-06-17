@@ -12,7 +12,6 @@ public class AdsImage {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int id;
-    private byte[] data;
     private long fileSize;
     private String filePath;
     private String contentType;
