@@ -53,7 +53,7 @@ public class UserController {
 
     //контроллер для возврата массива байт аватара пользователя
     @GetMapping("/avatar/{id}/db")
-    public ResponseEntity<byte[]> getUserAvatar(@PathVariable Integer id) {
+    public ResponseEntity<byte[]> getUserAvatar(@PathVariable Integer id) throws IOException {
         return ResponseEntity.ok(userService.getURLAvatar(id));
     }
 }

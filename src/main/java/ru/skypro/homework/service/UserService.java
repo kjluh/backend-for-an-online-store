@@ -2,6 +2,7 @@ package ru.skypro.homework.service;
 
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
@@ -17,7 +18,16 @@ import ru.skypro.homework.mapper.UserMapper;
 import ru.skypro.homework.repositories.AvatarUserEntityRepository;
 import ru.skypro.homework.repositories.UserEntityRepository;
 
+import javax.imageio.ImageIO;
+import java.awt.*;
+import java.awt.image.BufferedImage;
 import java.io.*;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.util.Arrays;
+import java.util.Base64;
+
+import static java.nio.file.StandardOpenOption.CREATE_NEW;
 
 /**
  * Сервис для работы с пользователями
@@ -29,6 +39,9 @@ public class UserService {
 
     private final AvatarUserEntityRepository avatarUserEntityRepository;
 
+    @Value("{Avatar.cover.dir.path}")
+    private String userAvatarsDir;
+
     public UserService(UserEntityRepository userEntityRepository, AvatarUserEntityRepository avatarUserEntityRepository) {
         this.userEntityRepository = userEntityRepository;
         this.avatarUserEntityRepository = avatarUserEntityRepository;
@@ -36,7 +49,8 @@ public class UserService {
 
     /**
      * Обновление пароля
-     * @param newPass принимает сущность нового пароля
+     *
+     * @param newPass  принимает сущность нового пароля
      * @param userName принимает логин пользователя
      * @return возвращает статус по смене 200 - ок, 401 ошибка
      */
@@ -53,6 +67,7 @@ public class UserService {
 
     /**
      * Возвращает сущность пользователя для отображения на странице
+     *
      * @param userName принимает логин
      * @return принимает логин пользователя
      */
@@ -60,7 +75,7 @@ public class UserService {
     public User getUser(String userName) {
         UserEntity userEntity = getUserEntity(userName);
         User thisUser = UserMapper.INSTANCE.toDTO(userEntity);
-        if (null==userEntity.getAvatarUserEntity()){
+        if (null == userEntity.getAvatarUserEntity()) {
             return thisUser;
         }
         thisUser.setImage("/users/avatar/" + userEntity.getAvatarUserEntity().getId() + "/db");
@@ -69,8 +84,7 @@ public class UserService {
     }
 
     /**
-     *
-     * @param user принимает сущность пользователя с изменениями для обновления
+     * @param user     принимает сущность пользователя с изменениями для обновления
      * @param userName принимает логин пользователя
      * @return возвращает обновленного пользователя
      */
@@ -83,8 +97,7 @@ public class UserService {
     }
 
     /**
-     *
-     * @param image Мультипад файл картинка новой аватарки
+     * @param image    Мультипад файл картинка новой аватарки
      * @param userName принимает логин пользователя
      * @throws IOException
      */
@@ -92,14 +105,23 @@ public class UserService {
     public void updateAvatar(MultipartFile image, String userName) throws IOException {
         UserEntity userEntity = getUserEntity(userName);
 
-        AvatarUserEntity avatar = avatarUserEntityRepository.findById(
-                (userEntity.getId())).orElse(new AvatarUserEntity());
+        //сохранение на сервак с именем пользователя
+        Path filePath = Path.of(userAvatarsDir, userName + "." + image.getOriginalFilename().substring(image.getOriginalFilename().lastIndexOf(".") + 1));
+        Files.createDirectories(filePath.getParent());
+        Files.deleteIfExists(filePath);
+        try (InputStream is = image.getInputStream(); OutputStream os = Files.newOutputStream(filePath, CREATE_NEW); BufferedInputStream bis = new BufferedInputStream(is, 1024); BufferedOutputStream bos = new BufferedOutputStream(os, 1024);) {
+            bis.transferTo(bos);
+        }
+        // сохранение авы в бд
+        AvatarUserEntity avatar = avatarUserEntityRepository.findById((userEntity.getId())).orElse(new AvatarUserEntity());
         avatar.setUserEntity(userEntity);
         avatar.setMediaType(image.getContentType());
         avatar.setData(image.getBytes());
+        avatar.setFilePath(filePath.toString());
         avatarUserEntityRepository.save(avatar);
         userEntity.setAvatarUserEntity(avatar);
         userEntityRepository.save(userEntity);
+
     }
 
     @Transactional(readOnly = true)
@@ -107,7 +129,15 @@ public class UserService {
         return userEntityRepository.findByUsername(userName);
     }
 
-    public byte[] getURLAvatar(Integer id) {
-        return avatarUserEntityRepository.findById(id).orElseThrow().getData();
+    public byte[] getURLAvatar(Integer id) throws IOException {
+
+//        Метод для получения авы с сервера
+        AvatarUserEntity avatarUser = avatarUserEntityRepository.findById(id).orElse(new AvatarUserEntity());
+        File file = new File(avatarUser.getFilePath());
+        byte[] fileContent = Files.readAllBytes(file.toPath());
+
+//        Метод для получения авы из бд
+//        return avatarUserEntityRepository.findById(id).orElseThrow().getData();
+        return fileContent;
     }
 }

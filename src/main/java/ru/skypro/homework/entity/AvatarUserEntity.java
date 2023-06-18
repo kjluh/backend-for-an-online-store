@@ -9,8 +9,14 @@ import javax.persistence.*;
 public class AvatarUserEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+
     private int id;
+
     private String mediaType;
+
+    //эксперементируем
+    private String filePath;
+
     @Lob
     private byte[] data;
 

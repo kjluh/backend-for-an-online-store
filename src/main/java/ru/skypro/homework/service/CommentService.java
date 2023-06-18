@@ -39,6 +39,10 @@ public class CommentService {
         for (CommentEntity commentEntity: commentEntityList) {
             Comment thisComment = CommentMapper.INSTANCE.commentEntityToComment(commentEntity);
             thisComment.setAuthorImage("/users/avatar/" + userService.getUserEntity("user@gmail.com").getId() + "/db");
+
+            //При мапинге время не переделывалось строку.
+            thisComment.setCreatedAt(commentEntity.getCreateTime().toInstant(ZoneOffset.UTC).toEpochMilli());
+
             commentDtoList.add(thisComment);
         }
 
@@ -47,7 +51,7 @@ public class CommentService {
         responseWrapperComment.setResults(commentDtoList);
         return responseWrapperComment;
     }
-@Transactional
+//@Transactional
     public Comment createNewAdsComment(int adId, CreateComment commentText) {
         CommentEntity commentEntity = new CommentEntity();
         commentEntity.setCommentText(commentText.toString());

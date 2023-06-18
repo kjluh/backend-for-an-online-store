@@ -60,7 +60,7 @@ CREATE TABLE comment_entity
 );
 
 --changeSet Anatoly:7
-ALTER TABLE avatar_user_entity DROP COLUMN file_path;
+-- ALTER TABLE avatar_user_entity DROP COLUMN file_path;
 ALTER TABLE avatar_user_entity DROP COLUMN file_size;
 
 --changeSet Konstantin:8
