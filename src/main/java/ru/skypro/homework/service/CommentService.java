@@ -31,7 +31,7 @@ public class CommentService {
         this.adsService = adsService;
     }
 @Transactional
-    public ResponseWrapperComment getAllCommentsByAdsId(int adId, User author) {
+    public ResponseWrapperComment getAllCommentsByAdsId(int adId) {
         List<CommentEntity> commentEntityList = new ArrayList<>();
         commentEntityList.addAll(commentRepository.findCommentEntitiesByAdsEntity_Id(adId));
 
@@ -39,7 +39,7 @@ public class CommentService {
 
         for (CommentEntity commentEntity: commentEntityList) {
             Comment thisComment = CommentMapper.INSTANCE.commentEntityToComment(commentEntity);
-            thisComment.setAuthorImage("/users/avatar/" + userService.getUserEntity(author.getUsername()).getId() + "/db");
+            thisComment.setAuthorImage("/users/avatar/" + userService.getUserEntity(commentEntity.getAuthor().getUsername()).getId() + "/db");
 
             //При мапинге время не переделывалось строку.
             thisComment.setCreatedAt(commentEntity.getCreateTime().toInstant(ZoneOffset.UTC).toEpochMilli());

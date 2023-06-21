@@ -21,8 +21,8 @@ public class CommentsController {
     }
 
     @GetMapping("{id}/comments")
-    public ResponseEntity<ResponseWrapperComment> getCom(@PathVariable int id, @AuthenticationPrincipal User author) {
-        return ResponseEntity.ok(commentService.getAllCommentsByAdsId(id, author));
+    public ResponseEntity<ResponseWrapperComment> getCom(@PathVariable int id) {
+        return ResponseEntity.ok(commentService.getAllCommentsByAdsId(id));
     }
 
     @PostMapping("{id}/comments")
