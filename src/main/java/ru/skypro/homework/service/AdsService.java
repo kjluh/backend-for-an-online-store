@@ -43,8 +43,8 @@ public class AdsService {
 
     public ResponseWrapperAds findAuthorizedUserAds(User author) {
         //раскомментировать когда заработает нормальная авторизация
-        //adsEntity.setAuthor(userService.getUserEntity(author.getUsername()));
-        UserEntity user = userService.getUserEntity("user@gmail.com");
+        //adsEntity.setAuthor(userService.getUserEntity());
+        UserEntity user = userService.getUserEntity(author.getUsername());
         Collection<AdsEntity> adsEntityCollection = adsRepository.findAllByAuthor_Id(user.getId());
 
         Collection<Ads> adsCollection = adsEntityCollectionToAdsCollection(adsEntityCollection);
@@ -59,8 +59,8 @@ public class AdsService {
     public Ads saveNewAd(CreateAds newAds, MultipartFile image, User author) {
         AdsEntity adsEntity = AdsMapper.INSTANCE.createAdsToAdsEntity(newAds);
         //раскомментировать когда заработает нормальная авторизация
-        //adsEntity.setAuthor(userService.getUserEntity(author.getUsername()));
-        adsEntity.setAuthor(userService.getUserEntity("user@gmail.com"));
+        adsEntity.setAuthor(userService.getUserEntity(author.getUsername()));
+//        adsEntity.setAuthor(userService.getUserEntity("user@gmail.com"));
         adsEntity.setCreatedAt(LocalDateTime.now());
         adsRepository.save(adsEntity);
         try {

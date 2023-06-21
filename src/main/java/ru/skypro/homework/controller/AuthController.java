@@ -1,8 +1,5 @@
 package ru.skypro.homework.controller;
-
-import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
@@ -16,37 +13,40 @@ import ru.skypro.homework.entity.UserEntity;
 import ru.skypro.homework.mapper.UserMapper;
 import ru.skypro.homework.repositories.UserEntityRepository;
 import ru.skypro.homework.service.AuthService;
-
 import static ru.skypro.homework.dto.Role.USER;
 
 @Slf4j
 @CrossOrigin(value = "http://localhost:3000")
 @RestController
 public class AuthController {
+    private final AuthService authService;
 
-    @Autowired
-    private UserEntityRepository entityRepository;
+    private final UserEntityRepository userEntityRepository;
+
+    public AuthController(AuthService authService, UserEntityRepository userEntityRepository) {
+        this.authService = authService;
+        this.userEntityRepository = userEntityRepository;
+    }
 
     @PostMapping("/login")
-    public ResponseEntity<?> login(@RequestBody LoginReq loginReq) {
-//        if (authService.login(req.getUsername(), req.getPassword())) {
-//            return ResponseEntity.ok().build();
-//        } else {
-//            return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
-//        }
-        return ResponseEntity.ok().build();
+    public ResponseEntity<?> login(@RequestBody LoginReq req) {
+        if (authService.login(req.getUsername(), req.getPassword())) {
+            return ResponseEntity.ok().build();
+        } else {
+            return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
+        }
     }
 
     @PostMapping("/register")
     public ResponseEntity<?> register(@RequestBody RegisterReq req) {
-        UserEntity userEntity = UserMapper.INSTANCE.toDTO(req);
-        entityRepository.save(userEntity);
-//        Role role = req.getRole() == null ? USER : req.getRole();
-//        if (authService.register(req, role)) {
-//            return ResponseEntity.ok().build();
-//        } else {
-//            return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
-//        }
-        return ResponseEntity.ok().build();
+        Role role = req.getRole() == null ? USER : req.getRole();//тут3 должна присваиваться роль?
+        if (authService.register(req, role)) {
+            UserEntity userEntity = UserMapper.INSTANCE.toEntity(req);
+            userEntity.setRole(role);
+            userEntityRepository.save(userEntity);
+            return ResponseEntity.ok().build();
+        } else {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
+        }
     }
 }

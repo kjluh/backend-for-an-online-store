@@ -29,9 +29,9 @@ public class UserController {
     @PostMapping("/set_password")
     public ResponseEntity updatePassword(@RequestBody NewPassword newPass, Authentication authentication) {
         if (userService.updatePassword(newPass, authentication.getName())){
-            ResponseEntity.ok().build();
+           return ResponseEntity.ok().build();
         }
-        return ResponseEntity.status(401).build();
+        return ResponseEntity.status(403).build();
     }
 
     @GetMapping("/me")

@@ -109,7 +109,10 @@ public class UserService {
         Path filePath = Path.of(userAvatarsDir, userName + "." + image.getOriginalFilename().substring(image.getOriginalFilename().lastIndexOf(".") + 1));
         Files.createDirectories(filePath.getParent());
         Files.deleteIfExists(filePath);
-        try (InputStream is = image.getInputStream(); OutputStream os = Files.newOutputStream(filePath, CREATE_NEW); BufferedInputStream bis = new BufferedInputStream(is, 1024); BufferedOutputStream bos = new BufferedOutputStream(os, 1024);) {
+        try (InputStream is = image.getInputStream();
+             OutputStream os = Files.newOutputStream(filePath, CREATE_NEW);
+             BufferedInputStream bis = new BufferedInputStream(is, 1024);
+             BufferedOutputStream bos = new BufferedOutputStream(os, 1024);) {
             bis.transferTo(bos);
         }
         // сохранение авы в бд
@@ -132,12 +135,12 @@ public class UserService {
     public byte[] getURLAvatar(Integer id) throws IOException {
 
 //        Метод для получения авы с сервера
-        AvatarUserEntity avatarUser = avatarUserEntityRepository.findById(id).orElse(new AvatarUserEntity());
-        File file = new File(avatarUser.getFilePath());
-        byte[] fileContent = Files.readAllBytes(file.toPath());
+//        AvatarUserEntity avatarUser = avatarUserEntityRepository.findById(id).orElseThrow();
+//        File file = new File(avatarUser.getFilePath());
+//        byte[] fileContent = Files.readAllBytes(file.toPath());
 
 //        Метод для получения авы из бд
-//        return avatarUserEntityRepository.findById(id).orElseThrow().getData();
-        return fileContent;
+        return avatarUserEntityRepository.findById(id).orElseThrow().getData();
+//        return fileContent;
     }
 }
