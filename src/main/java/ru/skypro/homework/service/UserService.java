@@ -1,31 +1,20 @@
 package ru.skypro.homework.service;
-
-
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
-import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 import ru.skypro.homework.dto.NewPassword;
-import ru.skypro.homework.dto.RegisterReq;
 import ru.skypro.homework.dto.User;
 import ru.skypro.homework.entity.AvatarUserEntity;
 import ru.skypro.homework.entity.UserEntity;
 import ru.skypro.homework.mapper.UserMapper;
 import ru.skypro.homework.repositories.AvatarUserEntityRepository;
 import ru.skypro.homework.repositories.UserEntityRepository;
+import ru.skypro.homework.security.MyUserDetails;
 
-import javax.imageio.ImageIO;
-import java.awt.*;
-import java.awt.image.BufferedImage;
 import java.io.*;
 import java.nio.file.Files;
 import java.nio.file.Path;
-import java.util.Arrays;
-import java.util.Base64;
 
 import static java.nio.file.StandardOpenOption.CREATE_NEW;
 
@@ -39,12 +28,15 @@ public class UserService {
 
     private final AvatarUserEntityRepository avatarUserEntityRepository;
 
+    private final MyUserDetails myUserDetails;
+
     @Value("{Avatar.cover.dir.path}")
     private String userAvatarsDir;
 
-    public UserService(UserEntityRepository userEntityRepository, AvatarUserEntityRepository avatarUserEntityRepository) {
+    public UserService(UserEntityRepository userEntityRepository, AvatarUserEntityRepository avatarUserEntityRepository, MyUserDetails myUserDetails) {
         this.userEntityRepository = userEntityRepository;
         this.avatarUserEntityRepository = avatarUserEntityRepository;
+        this.myUserDetails = myUserDetails;
     }
 
     /**
@@ -55,8 +47,8 @@ public class UserService {
      * @return возвращает статус по смене 200 - ок, 401 ошибка
      */
     @Transactional(readOnly = true)
-    public boolean updatePassword(NewPassword newPass, String userName) {
-        UserEntity userEntity = getUserEntity(userName);
+    public boolean updatePassword(NewPassword newPass) {
+        UserEntity userEntity = getUserEntity(myUserDetails.getUsername());
         if (userEntity.getPassword().equals(newPass.getCurrentPassword())) {
             userEntity.setPassword(newPass.getNewPassword());
             userEntityRepository.save(userEntity);
@@ -72,8 +64,8 @@ public class UserService {
      * @return принимает логин пользователя
      */
     @Transactional(readOnly = true)
-    public User getUser(String userName) {
-        UserEntity userEntity = getUserEntity(userName);
+    public User getUser() {
+        UserEntity userEntity = getUserEntity(myUserDetails.getUsername());
         User thisUser = UserMapper.INSTANCE.toDTO(userEntity);
         if (null == userEntity.getAvatarUserEntity()) {
             return thisUser;
@@ -135,12 +127,12 @@ public class UserService {
     public byte[] getURLAvatar(Integer id) throws IOException {
 
 //        Метод для получения авы с сервера
-//        AvatarUserEntity avatarUser = avatarUserEntityRepository.findById(id).orElseThrow();
-//        File file = new File(avatarUser.getFilePath());
-//        byte[] fileContent = Files.readAllBytes(file.toPath());
+        AvatarUserEntity avatarUser = avatarUserEntityRepository.findById(id).orElseThrow();
+        File file = new File(avatarUser.getFilePath());
+        byte[] fileContent = Files.readAllBytes(file.toPath());
 
 //        Метод для получения авы из бд
-        return avatarUserEntityRepository.findById(id).orElseThrow().getData();
-//        return fileContent;
+//        return avatarUserEntityRepository.findById(id).orElseThrow().getData();
+        return fileContent;
     }
 }

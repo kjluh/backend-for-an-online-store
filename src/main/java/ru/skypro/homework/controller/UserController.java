@@ -27,16 +27,16 @@ public class UserController {
     }
 
     @PostMapping("/set_password")
-    public ResponseEntity updatePassword(@RequestBody NewPassword newPass, Authentication authentication) {
-        if (userService.updatePassword(newPass, authentication.getName())){
+    public ResponseEntity updatePassword(@RequestBody NewPassword newPass) {
+        if (userService.updatePassword(newPass)){
            return ResponseEntity.ok().build();
         }
         return ResponseEntity.status(403).build();
     }
 
     @GetMapping("/me")
-    public ResponseEntity<User> getUser(Authentication authentication) {
-        return ResponseEntity.ok(userService.getUser(authentication.getName()));
+    public ResponseEntity<User> getUser() {
+        return ResponseEntity.ok(userService.getUser());
     }
 
     @PatchMapping("/me")

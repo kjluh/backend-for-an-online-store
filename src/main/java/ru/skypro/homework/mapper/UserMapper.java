@@ -6,6 +6,7 @@ import org.mapstruct.MappingTarget;
 import org.mapstruct.factory.Mappers;
 import ru.skypro.homework.dto.LoginReq;
 import ru.skypro.homework.dto.RegisterReq;
+import ru.skypro.homework.dto.UserSecurity;
 import ru.skypro.homework.entity.UserEntity;
 import ru.skypro.homework.dto.User;
 
@@ -25,5 +26,8 @@ public interface UserMapper {
 
     @Mapping(source = "username", target = "email")
     User toDTO(UserEntity userEntity);
+
+    @Mapping(source = "username", target = "login")
+    UserSecurity toDTOSecurity(UserEntity userEntity);
 
 }
