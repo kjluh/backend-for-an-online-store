@@ -1,47 +1,49 @@
 package ru.skypro.homework.service.impl;
 
-import org.springframework.security.core.userdetails.User;
 import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import ru.skypro.homework.dto.RegisterReq;
 import org.springframework.security.provisioning.UserDetailsManager;
 import ru.skypro.homework.dto.Role;
+import ru.skypro.homework.entity.UserEntity;
+import ru.skypro.homework.mapper.UserMapper;
+import ru.skypro.homework.repositories.UserEntityRepository;
 import ru.skypro.homework.service.AuthService;
 
 @Service
 public class AuthServiceImpl implements AuthService {
 
-    private final UserDetailsManager manager;
+    private final UserDetailsService manager;
+
+    private final UserEntityRepository userEntityRepository;
 
     private final PasswordEncoder encoder;
 
-    public AuthServiceImpl(UserDetailsManager manager, PasswordEncoder passwordEncoder) {
+    public AuthServiceImpl(UserDetailsManager manager, UserEntityRepository userEntityRepository, PasswordEncoder passwordEncoder) {
         this.manager = manager;
+        this.userEntityRepository = userEntityRepository;
         this.encoder = passwordEncoder;
     }
 
     @Override
     public boolean login(String userName, String password) {
-        if (!manager.userExists(userName)) {
+        UserDetails userDetails = manager.loadUserByUsername(userName);
+        if (userDetails == null) {
             return false;
         }
-        UserDetails userDetails = manager.loadUserByUsername(userName);
         return encoder.matches(password, userDetails.getPassword());
     }
 
     @Override
     public boolean register(RegisterReq registerReq, Role role) {
-        if (manager.userExists(registerReq.getUsername())) {
+        if (userEntityRepository.findByUsername(registerReq.getUsername()) == null) {
             return false;
         }
-        manager.createUser(
-                User.builder()
-                        .passwordEncoder(this.encoder::encode)
-                        .password(registerReq.getPassword())
-                        .username(registerReq.getUsername())
-                        .roles(role.name())
-                        .build());
+        UserEntity userEntity = UserMapper.INSTANCE.toEntity(registerReq);
+        userEntity.setRole(role);
+        userEntityRepository.save(userEntity);
         return true;
     }
 }
