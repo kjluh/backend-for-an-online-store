@@ -19,12 +19,12 @@ public class AuthServiceImpl implements AuthService {
 
     private final UserEntityRepository userEntityRepository;
 
-    private final PasswordEncoder encoder;
+//    private final PasswordEncoder encoder;
 
-    public AuthServiceImpl(UserDetailsManager manager, UserEntityRepository userEntityRepository, PasswordEncoder passwordEncoder) {
+    public AuthServiceImpl(UserDetailsService manager, UserEntityRepository userEntityRepository, PasswordEncoder passwordEncoder) {
         this.manager = manager;
         this.userEntityRepository = userEntityRepository;
-        this.encoder = passwordEncoder;
+//        this.encoder = passwordEncoder;
     }
 
     @Override
@@ -33,7 +33,9 @@ public class AuthServiceImpl implements AuthService {
         if (userDetails == null) {
             return false;
         }
-        return encoder.matches(password, userDetails.getPassword());
+//        return encoder.matches(password, userDetails.getPassword());
+        //сверка логина и пароля без бкрипта
+        return userDetails.getUsername().equals(userName)&&userDetails.getPassword().equals(password);
     }
 
     @Override
