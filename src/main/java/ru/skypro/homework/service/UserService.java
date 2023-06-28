@@ -1,5 +1,6 @@
 package ru.skypro.homework.service;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
@@ -30,13 +31,16 @@ public class UserService {
 
     private final MyUserDetails myUserDetails;
 
+    private final PasswordEncoder encoder;
+
     @Value("{Avatar.cover.dir.path}")
     private String userAvatarsDir;
 
-    public UserService(UserEntityRepository userEntityRepository, AvatarUserEntityRepository avatarUserEntityRepository, MyUserDetails myUserDetails) {
+    public UserService(UserEntityRepository userEntityRepository, AvatarUserEntityRepository avatarUserEntityRepository, MyUserDetails myUserDetails, PasswordEncoder encoder) {
         this.userEntityRepository = userEntityRepository;
         this.avatarUserEntityRepository = avatarUserEntityRepository;
         this.myUserDetails = myUserDetails;
+        this.encoder = encoder;
     }
 
     /**
@@ -49,8 +53,8 @@ public class UserService {
     @Transactional(readOnly = true)
     public boolean updatePassword(NewPassword newPass) {
         UserEntity userEntity = getUserEntity(myUserDetails.getUsername());
-        if (userEntity.getPassword().equals(newPass.getCurrentPassword())) {
-            userEntity.setPassword(newPass.getNewPassword());
+        if (userEntity.getPassword().equals(encoder.encode(newPass.getCurrentPassword()))) {
+            userEntity.setPassword(encoder.encode(newPass.getNewPassword()));
             userEntityRepository.save(userEntity);
             return true;
         }
