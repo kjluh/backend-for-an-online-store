@@ -1,5 +1,6 @@
 package ru.skypro.homework.service;
 
+import org.springframework.security.core.userdetails.User;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import ru.skypro.homework.dto.Comment;
@@ -38,7 +39,7 @@ public class CommentService {
 
         for (CommentEntity commentEntity: commentEntityList) {
             Comment thisComment = CommentMapper.INSTANCE.commentEntityToComment(commentEntity);
-            thisComment.setAuthorImage("/users/avatar/" + userService.getUserEntity("user@gmail.com").getId() + "/db");
+            thisComment.setAuthorImage("/users/avatar/" + userService.getUserEntity(commentEntity.getAuthor().getUsername()).getId() + "/db");
 
             //При мапинге время не переделывалось строку.
             thisComment.setCreatedAt(commentEntity.getCreateTime().toInstant(ZoneOffset.UTC).toEpochMilli());
@@ -52,11 +53,11 @@ public class CommentService {
         return responseWrapperComment;
     }
 //@Transactional
-    public Comment createNewAdsComment(int adId, CreateComment commentText) {
+    public Comment createNewAdsComment(int adId, CreateComment commentText, User author) {
         CommentEntity commentEntity = new CommentEntity();
         commentEntity.setCommentText(commentText.toString());
         commentEntity.setCreateTime(LocalDateTime.now());
-        commentEntity.setAuthor(userService.getUserEntity("user@gmail.com"));
+        commentEntity.setAuthor(userService.getUserEntity(author.getUsername()));
         commentEntity.setAdsEntity(adsService.findById(adId));
         commentRepository.save(commentEntity);
 

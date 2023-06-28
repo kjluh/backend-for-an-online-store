@@ -1,6 +1,8 @@
 package ru.skypro.homework.controller;
 
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.security.core.userdetails.User;
 import org.springframework.web.bind.annotation.*;
 import ru.skypro.homework.dto.Comment;
 import ru.skypro.homework.dto.CreateComment;
@@ -24,8 +26,8 @@ public class CommentsController {
     }
 
     @PostMapping("{id}/comments")
-    public ResponseEntity<Comment> saveCom(@PathVariable int id, @RequestBody CreateComment text) {
-        return ResponseEntity.ok(commentService.createNewAdsComment(id, text));
+    public ResponseEntity<Comment> saveCom(@PathVariable int id, @RequestBody CreateComment text, @AuthenticationPrincipal User author) {
+        return ResponseEntity.ok(commentService.createNewAdsComment(id, text, author));
     }
 
     @DeleteMapping("{adId}/comments/{commentId}")
