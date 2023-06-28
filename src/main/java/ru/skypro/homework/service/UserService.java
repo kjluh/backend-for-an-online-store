@@ -1,4 +1,5 @@
 package ru.skypro.homework.service;
+
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -46,25 +47,20 @@ public class UserService {
     /**
      * Обновление пароля
      *
-     * @param newPass  принимает сущность нового пароля
-     * @param userName принимает логин пользователя
+     * @param newPass принимает сущность нового пароля
      * @return возвращает статус по смене 200 - ок, 401 ошибка
      */
-    @Transactional(readOnly = true)
+    @Transactional
     public boolean updatePassword(NewPassword newPass) {
         UserEntity userEntity = getUserEntity(myUserDetails.getUsername());
-        if (userEntity.getPassword().equals(encoder.encode(newPass.getCurrentPassword()))) {
-            userEntity.setPassword(encoder.encode(newPass.getNewPassword()));
-            userEntityRepository.save(userEntity);
-            return true;
-        }
-        return false;
+        userEntity.setPassword(encoder.encode(newPass.getNewPassword()));
+        userEntityRepository.save(userEntity);
+        return true;
     }
 
     /**
      * Возвращает сущность пользователя для отображения на странице
      *
-     * @param userName принимает логин
      * @return принимает логин пользователя
      */
     @Transactional(readOnly = true)
@@ -123,7 +119,7 @@ public class UserService {
 
     }
 
-    @Transactional(readOnly = true)
+    @Transactional()
     public UserEntity getUserEntity(String userName) {
         return userEntityRepository.findByUsername(userName);
     }

@@ -28,6 +28,7 @@ public interface UserMapper {
     User toDTO(UserEntity userEntity);
 
     @Mapping(source = "username", target = "login")
+//    @Mapping(ignore = true, target = "avatarUserEntity")
     UserSecurity toDTOSecurity(UserEntity userEntity);
 
 }

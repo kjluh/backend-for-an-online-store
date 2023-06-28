@@ -37,10 +37,9 @@ public class AdsController {
 
     @PostMapping(consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     public ResponseEntity<Ads> saveNewAd(@RequestPart CreateAds properties,
-                                         @RequestPart MultipartFile image,
-                                         @AuthenticationPrincipal User authUser) {
+                                         @RequestPart MultipartFile image) {
 
-        return ResponseEntity.ok(adsService.saveNewAd(properties, image, authUser));
+        return ResponseEntity.ok(adsService.saveNewAd(properties, image));
     }
 
     @GetMapping("{id}")
@@ -59,8 +58,8 @@ public class AdsController {
     }
 
     @GetMapping("me")
-    public ResponseEntity<ResponseWrapperAds> getAuthorizedUserAds(@AuthenticationPrincipal User authUser) {
-        return ResponseEntity.ok(adsService.findAuthorizedUserAds(authUser));
+    public ResponseEntity<ResponseWrapperAds> getAuthorizedUserAds() {
+        return ResponseEntity.ok(adsService.findAuthorizedUserAds());
     }
 
     @PatchMapping(value = "/{id}/image",consumes = MediaType.MULTIPART_FORM_DATA_VALUE)

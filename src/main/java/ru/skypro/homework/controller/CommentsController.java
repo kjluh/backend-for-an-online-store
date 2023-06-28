@@ -26,8 +26,8 @@ public class CommentsController {
     }
 
     @PostMapping("{id}/comments")
-    public ResponseEntity<Comment> saveCom(@PathVariable int id, @RequestBody CreateComment text, @AuthenticationPrincipal User author) {
-        return ResponseEntity.ok(commentService.createNewAdsComment(id, text, author));
+    public ResponseEntity<Comment> saveCom(@PathVariable int id, @RequestBody CreateComment text) {
+        return ResponseEntity.ok(commentService.createNewAdsComment(id, text));
     }
 
     @DeleteMapping("{adId}/comments/{commentId}")

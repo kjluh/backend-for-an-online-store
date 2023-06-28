@@ -34,13 +34,11 @@ public class AuthServiceImpl implements AuthService {
             return false;
         }
         return encoder.matches(password, userDetails.getPassword());
-//        сверка логина и пароля без бкрипта
-//        return userDetails.getUsername().equals(userName)&&userDetails.getPassword().equals(password);
     }
 
     @Override
     public boolean register(RegisterReq registerReq, Role role) {
-        if (userEntityRepository.findByUsername(registerReq.getUsername()) == null) {
+        if (userEntityRepository.findByUsername(registerReq.getUsername()) != null) {
             return false;
         }
         UserEntity userEntity = UserMapper.INSTANCE.toEntity(registerReq);

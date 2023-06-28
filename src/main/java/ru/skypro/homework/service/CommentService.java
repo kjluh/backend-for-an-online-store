@@ -9,6 +9,7 @@ import ru.skypro.homework.dto.ResponseWrapperComment;
 import ru.skypro.homework.entity.CommentEntity;
 import ru.skypro.homework.mapper.CommentMapper;
 import ru.skypro.homework.repositories.CommentRepository;
+import ru.skypro.homework.security.MyUserDetails;
 
 import java.time.Instant;
 import java.time.LocalDateTime;
@@ -23,12 +24,14 @@ public class CommentService {
     private final CommentRepository commentRepository;
     private final UserService userService;
     private final AdsService adsService;
+    private final MyUserDetails myUserDetails; // спринг секьюрити сюда положит авторизированного пользователя
 
 
-    public CommentService(CommentRepository commentsForAdsRepository, UserService userService, AdsService adsService) {
+    public CommentService(CommentRepository commentsForAdsRepository, UserService userService, AdsService adsService, MyUserDetails myUserDetails) {
         this.commentRepository = commentsForAdsRepository;
         this.userService = userService;
         this.adsService = adsService;
+        this.myUserDetails = myUserDetails;
     }
 @Transactional
     public ResponseWrapperComment getAllCommentsByAdsId(int adId) {
@@ -53,11 +56,11 @@ public class CommentService {
         return responseWrapperComment;
     }
 //@Transactional
-    public Comment createNewAdsComment(int adId, CreateComment commentText, User author) {
+    public Comment createNewAdsComment(int adId, CreateComment commentText) {
         CommentEntity commentEntity = new CommentEntity();
         commentEntity.setCommentText(commentText.toString());
         commentEntity.setCreateTime(LocalDateTime.now());
-        commentEntity.setAuthor(userService.getUserEntity(author.getUsername()));
+        commentEntity.setAuthor(userService.getUserEntity(myUserDetails.getUsername())); // чуть переделал авторизацию
         commentEntity.setAdsEntity(adsService.findById(adId));
         commentRepository.save(commentEntity);
 

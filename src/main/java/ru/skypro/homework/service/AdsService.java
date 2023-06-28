@@ -11,6 +11,7 @@ import ru.skypro.homework.entity.AdsEntity;
 import ru.skypro.homework.entity.UserEntity;
 import ru.skypro.homework.mapper.AdsMapper;
 import ru.skypro.homework.repositories.AdsRepository;
+import ru.skypro.homework.security.MyUserDetails;
 
 import java.io.IOException;
 import java.time.LocalDateTime;
@@ -23,11 +24,13 @@ public class AdsService {
     final private AdsRepository adsRepository;
     final private AdsImageService adsImageService;
     final private UserService userService;
+    private final MyUserDetails myUserDetails; // спринг секьюрити сюда положит авторизированного пользователя
 
-    public AdsService(AdsRepository adsRepository, AdsImageService adsImageService, UserService userService) {
+    public AdsService(AdsRepository adsRepository, AdsImageService adsImageService, UserService userService, MyUserDetails myUserDetails) {
         this.adsRepository = adsRepository;
         this.adsImageService = adsImageService;
         this.userService = userService;
+        this.myUserDetails = myUserDetails;
     }
 
     public ResponseWrapperAds findAllAds() {
@@ -41,10 +44,10 @@ public class AdsService {
         return responseWrapperAds;
     }
 
-    public ResponseWrapperAds findAuthorizedUserAds(User author) {
+    public ResponseWrapperAds findAuthorizedUserAds() {
         //раскомментировать когда заработает нормальная авторизация
         //adsEntity.setAuthor(userService.getUserEntity());
-        UserEntity user = userService.getUserEntity(author.getUsername());
+        UserEntity user = userService.getUserEntity(myUserDetails.getUsername());// чуть переделал авторизацию
         Collection<AdsEntity> adsEntityCollection = adsRepository.findAllByAuthor_Id(user.getId());
 
         Collection<Ads> adsCollection = adsEntityCollectionToAdsCollection(adsEntityCollection);
@@ -56,10 +59,10 @@ public class AdsService {
     }
 
 
-    public Ads saveNewAd(CreateAds newAds, MultipartFile image, User author) {
+    public Ads saveNewAd(CreateAds newAds, MultipartFile image) {
         AdsEntity adsEntity = AdsMapper.INSTANCE.createAdsToAdsEntity(newAds);
         //раскомментировать когда заработает нормальная авторизация
-        adsEntity.setAuthor(userService.getUserEntity(author.getUsername()));
+        adsEntity.setAuthor(userService.getUserEntity(myUserDetails.getUsername())); // чуть переделал авторизацию
 //        adsEntity.setAuthor(userService.getUserEntity("user@gmail.com"));
         adsEntity.setCreatedAt(LocalDateTime.now());
         adsRepository.save(adsEntity);
@@ -77,7 +80,7 @@ public class AdsService {
     public FullAds findFullAdsById(int id) {
         AdsEntity adsEntity = adsRepository.findById(id).get();
         FullAds fullAds = AdsMapper.INSTANCE.adsEntityToFullAds(adsEntity, adsEntity.getAuthor());
-        if (null!=adsImageService.findByAdsId(adsEntity.getId())) {
+        if (null != adsImageService.findByAdsId(adsEntity.getId())) {
             fullAds.setImage("/ads/image/" + adsImageService.findByAdsId(adsEntity.getId()).getId());
         }
         return fullAds;
@@ -89,8 +92,12 @@ public class AdsService {
 
 
     public void delete(int id) {
-        adsImageService.deleteByAdsId(id);
-        adsRepository.deleteById(id);
+//        Таким образом проверять что это владелец обьявления или админ
+//        if (myUserDetails.getUsername().equals(adsRepository.findById(id).get().getAuthor().getUsername())
+//                || myUserDetails.getAuthorities().contains("ADMIN")) {
+            adsImageService.deleteByAdsId(id);
+            adsRepository.deleteById(id);
+//        }
     }
 
     public Ads updateAds(int id, CreateAds createAds) {
@@ -106,7 +113,7 @@ public class AdsService {
     private Collection<Ads> adsEntityCollectionToAdsCollection(Collection<AdsEntity> adsEntityCollection) {
         return adsEntityCollection.stream().map(adsEntity -> {
                     Ads ads = AdsMapper.INSTANCE.adsEntityToAds(adsEntity, adsEntity.getAuthor());
-                    if (null== adsImageService.findByAdsId(adsEntity.getId())){
+                    if (null == adsImageService.findByAdsId(adsEntity.getId())) {
                         return ads;
                     }
                     ads.setImage("/ads/image/" + adsImageService.findByAdsId(adsEntity.getId()).getId());
