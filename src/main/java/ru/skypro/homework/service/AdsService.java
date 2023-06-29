@@ -93,11 +93,11 @@ public class AdsService {
 
     public void delete(int id) {
 //        Таким образом проверять что это владелец обьявления или админ
-//        if (myUserDetails.getUsername().equals(adsRepository.findById(id).get().getAuthor().getUsername())
-//                || myUserDetails.getAuthorities().contains("ADMIN")) {
+        if (myUserDetails.getUsername().equals(adsRepository.findById(id).get().getAuthor().getUsername())
+                || myUserDetails.getAuthorities().contains("ADMIN")) {
             adsImageService.deleteByAdsId(id);
             adsRepository.deleteById(id);
-//        }
+        }
     }
 
     public Ads updateAds(int id, CreateAds createAds) {

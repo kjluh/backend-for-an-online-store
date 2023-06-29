@@ -35,9 +35,10 @@ CREATE TABLE ads_image
     content_type text
 );
 
--- --changeSet Konstantin:4
--- INSERT INTO user_entity(role, username, password, first_name, last_name, phone)
--- VALUES ('USER', 'user@gmail.com', 'password', 'John', 'Smith', '+79998887766');
+--changeSet Konstantin:4
+INSERT INTO user_entity(role, username, password, first_name, last_name, phone)
+VALUES ('ADMIN', 'user@gmail.com', '$2a$12$r5kvsAvblFXSPSyv5EfQt.W6TAppM3vg83Sz0NPOINYLnixK0JUf2', 'John', 'Smith', '+79998887766');
+-- пароль : password
 
 --changeSet Konstantin:5
 CREATE TABLE avatar_user_entity
