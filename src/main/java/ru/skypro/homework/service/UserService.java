@@ -127,12 +127,11 @@ public class UserService {
     public byte[] getURLAvatar(Integer id) throws IOException {
 
 //        Метод для получения авы с сервера
-        AvatarUserEntity avatarUser = avatarUserEntityRepository.findById(id).orElseThrow();
+        AvatarUserEntity avatarUser = avatarUserEntityRepository.findById(id).get();
         File file = new File(avatarUser.getFilePath());
-        byte[] fileContent = Files.readAllBytes(file.toPath());
+        return Files.readAllBytes(file.toPath());
 
 //        Метод для получения авы из бд
 //        return avatarUserEntityRepository.findById(id).orElseThrow().getData();
-        return fileContent;
     }
 }

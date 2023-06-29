@@ -32,7 +32,7 @@ public class CommentService {
         this.adsService = adsService;
         this.myUserDetails = myUserDetails;
     }
-@Transactional
+@Transactional(readOnly = true)
     public ResponseWrapperComment getAllCommentsByAdsId(int adId) {
         List<CommentEntity> commentEntityList = new ArrayList<>();
         commentEntityList.addAll(commentRepository.findCommentEntitiesByAdsEntity_Id(adId));
@@ -54,7 +54,8 @@ public class CommentService {
         responseWrapperComment.setResults(commentDtoList);
         return responseWrapperComment;
     }
-//@Transactional
+
+    @Transactional
     public Comment createNewAdsComment(int adId, CreateComment commentText) {
         CommentEntity commentEntity = new CommentEntity();
         commentEntity.setCommentText(commentText.toString());
@@ -72,7 +73,7 @@ public class CommentService {
     public void deleteCommentByAdsIdAndCommentEntityId(int adId, int id) {
         commentRepository.deleteCommentEntityByAdsEntity_IdAndId(adId, id);
     }
-
+@Transactional
     public Comment patchCommentByAdsIdAndCommentEntityId(int adId, int id, Comment comment) {
         comment.setPk(id);
         comment.setCreatedAt(LocalDateTime.now(ZoneOffset.UTC).toInstant(ZoneOffset.UTC).toEpochMilli());
