@@ -93,8 +93,7 @@ public class AdsService {
 
     public void delete(int id) {
 //        Таким образом проверять что это владелец обьявления или админ
-        if (myUserDetails.getUsername().equals(adsRepository.findById(id).get().getAuthor().getUsername())
-                || myUserDetails.getAuthorities().contains("ADMIN")) {
+        if (isChoiceRole(id)) {
             adsImageService.deleteByAdsId(id);
             adsRepository.deleteById(id);
         }
@@ -102,10 +101,13 @@ public class AdsService {
 
     public Ads updateAds(int id, CreateAds createAds) {
         AdsEntity adsEntity = adsRepository.findById(id).get();
-        AdsEntity newAdsEntity = AdsMapper.INSTANCE.createAdsToAdsEntity(createAds);
-        adsEntity.setDescription(newAdsEntity.getDescription());
-        adsEntity.setTitle(newAdsEntity.getTitle());
-        adsEntity.setPrice(newAdsEntity.getPrice());
+
+        if (isChoiceRole(id)) {
+            AdsEntity newAdsEntity = AdsMapper.INSTANCE.createAdsToAdsEntity(createAds);
+            adsEntity.setDescription(newAdsEntity.getDescription());
+            adsEntity.setTitle(newAdsEntity.getTitle());
+            adsEntity.setPrice(newAdsEntity.getPrice());
+        }
         return AdsMapper.INSTANCE.adsEntityToAds(adsRepository.save(adsEntity), adsEntity.getAuthor());
     }
 
@@ -120,6 +122,11 @@ public class AdsService {
                     return ads;
                 }
         ).collect(Collectors.toList());
+    }
+
+    private boolean isChoiceRole(int id) {
+        return (myUserDetails.getUsername().equals(adsRepository.findById(id).get().getAuthor().getUsername())
+                || myUserDetails.getAuthorities().contains("ADMIN"));
     }
 
 }

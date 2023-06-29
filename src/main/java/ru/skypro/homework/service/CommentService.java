@@ -32,14 +32,15 @@ public class CommentService {
         this.adsService = adsService;
         this.myUserDetails = myUserDetails;
     }
-@Transactional(readOnly = true)
+
+    @Transactional(readOnly = true)
     public ResponseWrapperComment getAllCommentsByAdsId(int adId) {
         List<CommentEntity> commentEntityList = new ArrayList<>();
         commentEntityList.addAll(commentRepository.findCommentEntitiesByAdsEntity_Id(adId));
 
         List<Comment> commentDtoList = new ArrayList<>();
 
-        for (CommentEntity commentEntity: commentEntityList) {
+        for (CommentEntity commentEntity : commentEntityList) {
             Comment thisComment = CommentMapper.INSTANCE.commentEntityToComment(commentEntity);
             thisComment.setAuthorImage("/users/avatar/" + userService.getUserEntity(commentEntity.getAuthor().getUsername()).getId() + "/db");
 
@@ -66,15 +67,20 @@ public class CommentService {
 
         Comment newComment = CommentMapper.INSTANCE.commentEntityToComment(commentEntity);
         newComment.setCreatedAt(commentEntity.getCreateTime().toInstant(ZoneOffset.UTC).toEpochMilli());
-    System.out.println(" sa " + newComment.getCreatedAt());
+        System.out.println(" sa " + newComment.getCreatedAt());
         return newComment;
     }
-@Transactional
+
+    @Transactional
     public void deleteCommentByAdsIdAndCommentEntityId(int adId, int id) {
-        commentRepository.deleteCommentEntityByAdsEntity_IdAndId(adId, id);
+        if(isChoiceRole(id)) {
+            commentRepository.deleteCommentEntityByAdsEntity_IdAndId(adId, id);
+        }
     }
-@Transactional
+
+    @Transactional
     public Comment patchCommentByAdsIdAndCommentEntityId(int adId, int id, Comment comment) {
+
         comment.setPk(id);
         comment.setCreatedAt(LocalDateTime.now(ZoneOffset.UTC).toInstant(ZoneOffset.UTC).toEpochMilli());
         comment.setAuthor(userService.getUserEntity(myUserDetails.getUsername()).getId());
@@ -86,10 +92,15 @@ public class CommentService {
         commentEntity.setCreateTime(Instant.ofEpochMilli(comment.getCreatedAt()).atZone(ZoneId.systemDefault()).toLocalDateTime());
 
         commentEntity.setAdsEntity(adsService.findById(adId));
-
-        commentRepository.save(commentEntity);
-
+        if (isChoiceRole(id)) {
+            commentRepository.save(commentEntity);
+        }
         return comment;
+    }
+
+    private boolean isChoiceRole(int id) {
+        return (myUserDetails.getUsername().equals(commentRepository.findById(id).get().getAuthor().getUsername())
+                || myUserDetails.getAuthorities().contains("ADMIN"));
     }
 
 }
