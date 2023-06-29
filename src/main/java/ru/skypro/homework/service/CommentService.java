@@ -12,7 +12,6 @@ import ru.skypro.homework.security.MyUserDetails;
 
 import java.time.Instant;
 import java.time.LocalDateTime;
-import java.time.ZoneId;
 import java.time.ZoneOffset;
 import java.util.ArrayList;
 import java.util.List;
@@ -58,7 +57,7 @@ public class CommentService {
     public Comment createNewAdsComment(int adId, CreateComment commentText) {
         CommentEntity commentEntity = new CommentEntity();
         commentEntity.setCommentText(commentText.toString());
-        commentEntity.setCreateTime(LocalDateTime.now());
+        commentEntity.setCreateTime(LocalDateTime.now(ZoneOffset.UTC));
         commentEntity.setAuthor(userService.getUserEntity(myUserDetails.getUsername())); // чуть переделал авторизацию
         commentEntity.setAdsEntity(adsService.findById(adId));
         commentRepository.save(commentEntity);
@@ -82,7 +81,7 @@ public class CommentService {
 
         CommentEntity commentEntity = CommentMapper.INSTANCE.commentToCommentEntity(comment);
 
-        commentEntity.setCreateTime(Instant.ofEpochMilli(comment.getCreatedAt()).atZone(ZoneId.systemDefault()).toLocalDateTime());
+        commentEntity.setCreateTime(Instant.ofEpochMilli(comment.getCreatedAt()).atZone(ZoneOffset.UTC).toLocalDateTime());
 
         commentEntity.setAdsEntity(adsService.findById(adId));
 
