@@ -1,6 +1,5 @@
 package ru.skypro.homework.service;
 
-import org.springframework.security.core.userdetails.User;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import ru.skypro.homework.dto.Comment;
@@ -77,9 +76,9 @@ public class CommentService {
     public Comment patchCommentByAdsIdAndCommentEntityId(int adId, int id, Comment comment) {
         comment.setPk(id);
         comment.setCreatedAt(LocalDateTime.now(ZoneOffset.UTC).toInstant(ZoneOffset.UTC).toEpochMilli());
-        comment.setAuthor(userService.getUserEntity("user@gmail.com").getId());
-        comment.setAuthorFirstName(userService.getUserEntity("user@gmail.com").getFirstName());
-        comment.setAuthorImage("/users/avatar/" + userService.getUserEntity("user@gmail.com").getId() + "/db");
+        comment.setAuthor(userService.getUserEntity(myUserDetails.getUsername()).getId());
+        comment.setAuthorFirstName(userService.getUserEntity(myUserDetails.getUsername()).getFirstName());
+        comment.setAuthorImage("/users/avatar/" + userService.getUserEntity(myUserDetails.getUsername()).getId() + "/db");
 
         CommentEntity commentEntity = CommentMapper.INSTANCE.commentToCommentEntity(comment);
 
