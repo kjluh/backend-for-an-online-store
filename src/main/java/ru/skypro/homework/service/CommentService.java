@@ -41,8 +41,10 @@ public class CommentService {
 
         for (CommentEntity commentEntity : commentEntityList) {
             Comment thisComment = CommentMapper.INSTANCE.commentEntityToComment(commentEntity);
-            thisComment.setAuthorImage("/users/avatar/" + userService.getUserEntity(commentEntity.getAuthor().getUsername()).getId() + "/db");
-
+//            если аватарки нет ссылку не сетим
+            if (commentEntity.getAuthor().getAvatarUserEntity() != null) {
+                thisComment.setAuthorImage("/users/avatar/" + userService.getUserEntity(commentEntity.getAuthor().getUsername()).getId() + "/db");
+            }
             //При мапинге время не переделывалось строку.
             thisComment.setCreatedAt(commentEntity.getCreateTime().toInstant(ZoneOffset.UTC).toEpochMilli());
 
