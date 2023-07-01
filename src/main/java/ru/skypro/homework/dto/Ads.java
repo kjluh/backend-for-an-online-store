@@ -4,14 +4,24 @@ import lombok.Data;
 
 @Data
 public class Ads {
-    //id автора объявления
+    /**
+     * Id автора объявления
+     */
     private int author;
-    //ссылка на картинку объявления
+    /**
+     * Ссылка на картинку объявления
+     */
     private String image;
-    //id объявления
+    /**
+     * Id объявления
+     */
     private int pk;
-    //цена объявления
+    /**
+     * Цена товара в объявлении
+     */
     private int price;
-    //заголовок объявления
+    /**
+     * Заголовок в объявлении
+     */
     private String title;
 }

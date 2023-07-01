@@ -22,10 +22,10 @@ public class MyUserDetails implements UserDetails {
         this.userSecurity = userSecurity;
     }
 
-    public UserSecurity getUserSecurity() {
-        return userSecurity;
-    }
-
+    /**
+     * Метод мапит и возвращает коллекцию ролей для спринга
+     * @return коллекция ролей
+     */
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
         return Optional.ofNullable(userSecurity)

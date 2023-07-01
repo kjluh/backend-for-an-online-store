@@ -21,7 +21,7 @@ public class CommentsController {
     }
 
     @GetMapping("{id}/comments")
-    public ResponseEntity<ResponseWrapperComment> getCom(@PathVariable int id) {
+    public ResponseEntity <ResponseWrapperComment> getCom(@PathVariable int id) {
         return ResponseEntity.ok(commentService.getAllCommentsByAdsId(id));
     }
 
@@ -31,9 +31,11 @@ public class CommentsController {
     }
 
     @DeleteMapping("{adId}/comments/{commentId}")
-    public ResponseEntity<?> deleteCom(@PathVariable int adId, @PathVariable int commentId) {
-        commentService.deleteCommentByAdsIdAndCommentEntityId(adId, commentId);
-        return ResponseEntity.ok().build();
+    public ResponseEntity deleteCom(@PathVariable int adId, @PathVariable int commentId) {
+        if (commentService.deleteCommentByAdsIdAndCommentEntityId(adId, commentId)){
+            return ResponseEntity.ok().build();
+        }
+        return ResponseEntity.status(403).build();
     }
 
     @PatchMapping("{adId}/comments/{commentId}")

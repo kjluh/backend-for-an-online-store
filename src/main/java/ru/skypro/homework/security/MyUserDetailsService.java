@@ -22,7 +22,14 @@ public class MyUserDetailsService implements UserDetailsService {
         this.userMapper = userMapper;
         this.myUserDetails = myUserDetails;
     }
-@Transactional(readOnly = true)
+
+    /**
+     * Проверяет авторизацию пользователя.
+     * @param username логин пользователя
+     * @return пользователя авторизованного в системе
+     * @throws UsernameNotFoundException если не прошла авторизация
+     */
+    @Transactional(readOnly = true)
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
         UserSecurity userSecurity = userMapper.toDTOSecurity(userEntityRepository.findByUsername(username));

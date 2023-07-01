@@ -1,5 +1,6 @@
 package ru.skypro.homework.service;
 
+import org.springframework.http.HttpStatus;
 import org.springframework.security.core.userdetails.User;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
@@ -78,7 +79,7 @@ public class AdsService {
     }
 
     public FullAds findFullAdsById(int id) {
-        AdsEntity adsEntity = adsRepository.findById(id).get();
+        AdsEntity adsEntity = adsRepository.findById(id).orElseThrow();
         FullAds fullAds = AdsMapper.INSTANCE.adsEntityToFullAds(adsEntity, adsEntity.getAuthor());
         if (null != adsImageService.findByAdsId(adsEntity.getId())) {
             fullAds.setImage("/ads/image/" + adsImageService.findByAdsId(adsEntity.getId()).getId());
@@ -87,28 +88,31 @@ public class AdsService {
     }
 
     public AdsEntity findById(int id) {
-        return adsRepository.findById(id).get();
+        return adsRepository.findById(id).orElseThrow();
     }
 
 
-    public void delete(int id) {
+    public boolean delete(int id) {
 //        Таким образом проверять что это владелец обьявления или админ
         if (isChoiceRole(id)) {
             adsImageService.deleteByAdsId(id);
             adsRepository.deleteById(id);
+            return true;
         }
+        return false;
     }
 
     public Ads updateAds(int id, CreateAds createAds) {
-        AdsEntity adsEntity = adsRepository.findById(id).get();
+        AdsEntity adsEntity = adsRepository.findById(id).orElseThrow();
 
         if (isChoiceRole(id)) {
             AdsEntity newAdsEntity = AdsMapper.INSTANCE.createAdsToAdsEntity(createAds);
             adsEntity.setDescription(newAdsEntity.getDescription());
             adsEntity.setTitle(newAdsEntity.getTitle());
             adsEntity.setPrice(newAdsEntity.getPrice());
+            return AdsMapper.INSTANCE.adsEntityToAds(adsRepository.save(adsEntity), adsEntity.getAuthor());
         }
-        return AdsMapper.INSTANCE.adsEntityToAds(adsRepository.save(adsEntity), adsEntity.getAuthor());
+        return null; // тут надо вернуть 403 , дима написал
     }
 
 
@@ -125,7 +129,7 @@ public class AdsService {
     }
 
     private boolean isChoiceRole(int id) {
-        return (myUserDetails.getUsername().equals(adsRepository.findById(id).get().getAuthor().getUsername())
+        return (myUserDetails.getUsername().equals(adsRepository.findById(id).orElseThrow().getAuthor().getUsername())
                 || myUserDetails.getAuthorities().contains("ADMIN"));
     }
 

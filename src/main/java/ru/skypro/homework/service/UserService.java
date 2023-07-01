@@ -33,7 +33,9 @@ public class UserService {
     private final MyUserDetails myUserDetails;
 
     private final PasswordEncoder encoder;
-
+    /**
+     * Адрес, где лежат аватарки
+     */
     @Value("{Avatar.cover.dir.path}")
     private String userAvatarsDir;
 
@@ -46,7 +48,6 @@ public class UserService {
 
     /**
      * Обновление пароля
-     *
      * @param newPass принимает сущность нового пароля
      * @return возвращает статус по смене 200 - ок, 401 ошибка
      */
@@ -60,7 +61,6 @@ public class UserService {
 
     /**
      * Возвращает сущность пользователя для отображения на странице
-     *
      * @return принимает логин пользователя
      */
     @Transactional(readOnly = true)
@@ -116,18 +116,30 @@ public class UserService {
         avatarUserEntityRepository.save(avatar);
         userEntity.setAvatarUserEntity(avatar);
         userEntityRepository.save(userEntity);
+        int[] x = new  int[]{1,2};
 
     }
 
+    /**
+     * Метод для извлечения пользователя из БД
+     * @param userName принимает логин
+     * @return сущность пользователя
+     */
     @Transactional()
     public UserEntity getUserEntity(String userName) {
         return userEntityRepository.findByUsername(userName);
     }
 
+    /**
+     * Метод возвращаем аватарку в виде массива байт
+     * @param id принимает id пользователя
+     * @return массив байт
+     * @throws IOException
+     */
     public byte[] getURLAvatar(Integer id) throws IOException {
 
 //        Метод для получения авы с сервера
-        AvatarUserEntity avatarUser = avatarUserEntityRepository.findById(id).get();
+        AvatarUserEntity avatarUser = avatarUserEntityRepository.findById(id).orElseThrow();
         File file = new File(avatarUser.getFilePath());
         return Files.readAllBytes(file.toPath());
 

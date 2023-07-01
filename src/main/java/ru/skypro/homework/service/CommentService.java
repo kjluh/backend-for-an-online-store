@@ -68,39 +68,42 @@ public class CommentService {
 
         Comment newComment = CommentMapper.INSTANCE.commentEntityToComment(commentEntity);
         newComment.setCreatedAt(commentEntity.getCreateTime().toInstant(ZoneOffset.UTC).toEpochMilli());
-        System.out.println(" sa " + newComment.getCreatedAt());
         return newComment;
     }
 
     @Transactional
-    public void deleteCommentByAdsIdAndCommentEntityId(int adId, int id) {
-        if(isChoiceRole(id)) {
+    public boolean deleteCommentByAdsIdAndCommentEntityId(int adId, int id) {
+        if (isChoiceRole(id)) {
             commentRepository.deleteCommentEntityByAdsEntity_IdAndId(adId, id);
+            return true;
         }
+        return false;
     }
 
     @Transactional
     public Comment patchCommentByAdsIdAndCommentEntityId(int adId, int id, Comment comment) {
-
-        comment.setPk(id);
-        comment.setCreatedAt(LocalDateTime.now(ZoneOffset.UTC).toInstant(ZoneOffset.UTC).toEpochMilli());
-        comment.setAuthor(userService.getUserEntity(myUserDetails.getUsername()).getId());
-        comment.setAuthorFirstName(userService.getUserEntity(myUserDetails.getUsername()).getFirstName());
-        comment.setAuthorImage("/users/avatar/" + userService.getUserEntity(myUserDetails.getUsername()).getId() + "/db");
-
-        CommentEntity commentEntity = CommentMapper.INSTANCE.commentToCommentEntity(comment);
-
-        commentEntity.setCreateTime(Instant.ofEpochMilli(comment.getCreatedAt()).atZone(ZoneOffset.UTC).toLocalDateTime());
-
-        commentEntity.setAdsEntity(adsService.findById(adId));
         if (isChoiceRole(id)) {
+            comment.setPk(id);
+            comment.setCreatedAt(LocalDateTime.now(ZoneOffset.UTC).toInstant(ZoneOffset.UTC).toEpochMilli());
+            comment.setAuthor(userService.getUserEntity(myUserDetails.getUsername()).getId());
+            comment.setAuthorFirstName(userService.getUserEntity(myUserDetails.getUsername()).getFirstName());
+            comment.setAuthorImage("/users/avatar/" + userService.getUserEntity(myUserDetails.getUsername()).getId() + "/db");
+
+            CommentEntity commentEntity = CommentMapper.INSTANCE.commentToCommentEntity(comment);
+
+            commentEntity.setCreateTime(Instant.ofEpochMilli(comment.getCreatedAt()).atZone(ZoneOffset.UTC).toLocalDateTime());
+
+            commentEntity.setAdsEntity(adsService.findById(adId));
+
             commentRepository.save(commentEntity);
+
+            return comment;
         }
-        return comment;
+        return null; //тут нужно вернуть, 403 дима пишет
     }
 
     private boolean isChoiceRole(int id) {
-        return (myUserDetails.getUsername().equals(commentRepository.findById(id).get().getAuthor().getUsername())
+        return (myUserDetails.getUsername().equals(commentRepository.findById(id).orElseThrow().getAuthor().getUsername())
                 || myUserDetails.getAuthorities().contains("ADMIN"));
     }
 

@@ -1,5 +1,6 @@
 package ru.skypro.homework.controller;
 
+import liquibase.pro.packaged.R;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
@@ -48,8 +49,11 @@ public class AdsController {
     }
 
     @DeleteMapping("{id}")
-    public void deleteAds(@PathVariable int id) {
-        adsService.delete(id);
+    public ResponseEntity deleteAds(@PathVariable int id) {
+        if (adsService.delete(id)) {
+            return ResponseEntity.ok().build();
+        }
+        return ResponseEntity.status(403).build();
     }
 
     @PatchMapping("{id}")
