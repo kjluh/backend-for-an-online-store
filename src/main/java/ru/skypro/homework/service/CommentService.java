@@ -88,18 +88,13 @@ public class CommentService {
             comment.setAuthor(userService.getUserEntity(myUserDetails.getUsername()).getId());
             comment.setAuthorFirstName(userService.getUserEntity(myUserDetails.getUsername()).getFirstName());
             comment.setAuthorImage("/users/avatar/" + userService.getUserEntity(myUserDetails.getUsername()).getId() + "/db");
-
             CommentEntity commentEntity = CommentMapper.INSTANCE.commentToCommentEntity(comment);
-
             commentEntity.setCreateTime(Instant.ofEpochMilli(comment.getCreatedAt()).atZone(ZoneOffset.UTC).toLocalDateTime());
-
             commentEntity.setAdsEntity(adsService.findById(adId));
-
             commentRepository.save(commentEntity);
-
             return comment;
         }
-        return null; //тут нужно вернуть, 403 дима пишет
+        return null;
     }
 
     private boolean isChoiceRole(int id) {

@@ -40,6 +40,9 @@ public class CommentsController {
 
     @PatchMapping("{adId}/comments/{commentId}")
     public ResponseEntity<Comment> updateCom(@PathVariable int adId, @PathVariable int commentId, @RequestBody Comment comment) {
-        return ResponseEntity.ok(commentService.patchCommentByAdsIdAndCommentEntityId(adId, commentId, comment));
+        if (commentService.patchCommentByAdsIdAndCommentEntityId(adId, commentId, comment) != null) {
+            return ResponseEntity.ok(commentService.patchCommentByAdsIdAndCommentEntityId(adId, commentId, comment));
+        }
+        return ResponseEntity.status(403).build();
     }
 }

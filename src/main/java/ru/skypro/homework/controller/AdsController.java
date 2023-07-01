@@ -58,7 +58,10 @@ public class AdsController {
 
     @PatchMapping("{id}")
     public ResponseEntity<Ads> updateAds(@PathVariable int id, @RequestBody CreateAds createAds) {
-        return ResponseEntity.ok(adsService.updateAds(id, createAds));
+        if (adsService.updateAds(id, createAds) != null) {
+            return ResponseEntity.ok(adsService.updateAds(id, createAds));
+        }
+        return ResponseEntity.status(403).build();
     }
 
     @GetMapping("me")
@@ -73,7 +76,11 @@ public class AdsController {
     }
 
 
-    // Эндпоит получения картинки с сервера
+    /**
+     * Эндпоит получения картинки с сервера
+     * @param id ID пользователя
+     * @return ссылку на картинку
+     */
     @GetMapping("/image/{id}")
     public ResponseEntity<byte[]> getAdsImage(@PathVariable Integer id) {
         byte[] image = null;
