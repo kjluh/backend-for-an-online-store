@@ -58,7 +58,7 @@ public class AdsController {
 
     @PatchMapping("{id}")
     public ResponseEntity<Ads> updateAds(@PathVariable int id, @RequestBody CreateAds createAds) {
-        if (adsService.updateAds(id, createAds) != null) {
+        if (adsService.isChoiceRole(id)) {
             return ResponseEntity.ok(adsService.updateAds(id, createAds));
         }
         return ResponseEntity.status(403).build();
@@ -71,7 +71,7 @@ public class AdsController {
 
     @PatchMapping(value = "/{id}/image",consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     public ResponseEntity<ArrayList<String>> updateAvatar(@PathVariable int id, @RequestPart MultipartFile image) {
-        // Обновление аватарки
+        // Обновление картинки объявления
         return ResponseEntity.ok(adsImageService.updateCover(id, image));
     }
 
