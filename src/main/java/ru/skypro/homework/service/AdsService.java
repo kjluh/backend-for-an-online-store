@@ -130,7 +130,7 @@ public class AdsService {
 
     private boolean isChoiceRole(int id) {
         return (myUserDetails.getUsername().equals(adsRepository.findById(id).orElseThrow().getAuthor().getUsername())
-                || myUserDetails.getAuthorities().contains("ADMIN"));
+                || myUserDetails.getAuthorities().stream().map(Object::toString).collect(Collectors.toList()).contains("ROLE_ADMIN"));
     }
 
 }

@@ -40,13 +40,13 @@ public class UserController {
     }
 
     @PatchMapping("/me")
-    public ResponseEntity<User> updateUser(@RequestBody User user, Authentication authentication) {
-        return ResponseEntity.ok(userService.updateUser(user, authentication.getName()));
+    public ResponseEntity<User> updateUser(@RequestBody User user) {
+        return ResponseEntity.ok(userService.updateUser(user));
     }
 
     @PatchMapping(value = "/me/image", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
-    public ResponseEntity updateAvatar(@RequestParam MultipartFile image, Authentication authentication) throws IOException {
-        userService.updateAvatar(image, authentication.getName());
+    public ResponseEntity updateAvatar(@RequestParam MultipartFile image) throws IOException {
+        userService.updateAvatar(image);
         return ResponseEntity.ok().build();
     }
 

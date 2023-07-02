@@ -37,12 +37,11 @@ public class AuthServiceImpl implements AuthService {
     }
 
     @Override
-    public boolean register(RegisterReq registerReq, Role role) {
+    public boolean register(RegisterReq registerReq) {
         if (null != userEntityRepository.findByUsername(registerReq.getUsername())) {
             return false;
         }
         UserEntity userEntity = UserMapper.INSTANCE.toEntity(registerReq);
-        userEntity.setRole(role);
         userEntity.setPassword(encoder.encode(registerReq.getPassword()));
         userEntityRepository.save(userEntity);
         return true;

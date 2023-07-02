@@ -15,6 +15,7 @@ import java.time.LocalDateTime;
 import java.time.ZoneOffset;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 public class CommentService {
@@ -99,7 +100,7 @@ public class CommentService {
 
     private boolean isChoiceRole(int id) {
         return (myUserDetails.getUsername().equals(commentRepository.findById(id).orElseThrow().getAuthor().getUsername())
-                || myUserDetails.getAuthorities().contains("ADMIN"));
+                || myUserDetails.getAuthorities().stream().map(Object::toString).collect(Collectors.toList()).contains("ROLE_ADMIN"));
     }
 
 }

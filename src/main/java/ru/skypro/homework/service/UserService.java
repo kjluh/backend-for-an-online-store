@@ -77,12 +77,11 @@ public class UserService {
 
     /**
      * @param user     принимает сущность пользователя с изменениями для обновления
-     * @param userName принимает логин пользователя
      * @return возвращает обновленного пользователя
      */
     @Transactional
-    public User updateUser(User user, String userName) {
-        UserEntity userEntity = getUserEntity(userName);
+    public User updateUser(User user) {
+        UserEntity userEntity = getUserEntity(myUserDetails.getUsername());
         UserMapper.INSTANCE.toEntity(user, userEntity);
         userEntityRepository.save(userEntity);
         return UserMapper.INSTANCE.toDTO(userEntity);
@@ -90,15 +89,14 @@ public class UserService {
 
     /**
      * @param image    Мультипад файл картинка новой аватарки
-     * @param userName принимает логин пользователя
      * @throws IOException
      */
     @Transactional // необходимо писать если вызываем сущность из бд с картинкой в параметрах с анат @lob
-    public void updateAvatar(MultipartFile image, String userName) throws IOException {
-        UserEntity userEntity = getUserEntity(userName);
+    public void updateAvatar(MultipartFile image) throws IOException {
+        UserEntity userEntity = getUserEntity(myUserDetails.getUsername());
 
         //сохранение на сервак с именем пользователя
-        Path filePath = Path.of(userAvatarsDir, userName + "." + image.getOriginalFilename().substring(image.getOriginalFilename().lastIndexOf(".") + 1));
+        Path filePath = Path.of(userAvatarsDir, myUserDetails.getUsername() + "." + image.getOriginalFilename().substring(image.getOriginalFilename().lastIndexOf(".") + 1));
         Files.createDirectories(filePath.getParent());
         Files.deleteIfExists(filePath);
         try (InputStream is = image.getInputStream();
