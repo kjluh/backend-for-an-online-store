@@ -1,7 +1,5 @@
 package ru.skypro.homework.service;
 
-import org.springframework.http.HttpStatus;
-import org.springframework.security.core.userdetails.User;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 import ru.skypro.homework.dto.Ads;
@@ -34,20 +32,26 @@ public class AdsService {
         this.myUserDetails = myUserDetails;
     }
 
+
+    /**
+     * Показать все объявления
+     * @return ДТО обертка для коллекции объявлений
+     */
     public ResponseWrapperAds findAllAds() {
         Collection<AdsEntity> adsEntityCollection = adsRepository.findAll();
-
         Collection<Ads> adsCollection = adsEntityCollectionToAdsCollection(adsEntityCollection);
-
         ResponseWrapperAds responseWrapperAds = new ResponseWrapperAds();
         responseWrapperAds.setCount(adsCollection.size());
         responseWrapperAds.setResults(adsCollection);
         return responseWrapperAds;
     }
 
+    /**
+     * Вернуть все объявления авторизованного пользователя
+     *
+     * @return ДТО обертка для коллекции объявлений
+     */
     public ResponseWrapperAds findAuthorizedUserAds() {
-        //раскомментировать когда заработает нормальная авторизация
-        //adsEntity.setAuthor(userService.getUserEntity());
         UserEntity user = userService.getUserEntity(myUserDetails.getUsername());// чуть переделал авторизацию
         Collection<AdsEntity> adsEntityCollection = adsRepository.findAllByAuthor_Id(user.getId());
 
@@ -59,12 +63,15 @@ public class AdsService {
         return responseWrapperAds;
     }
 
-
+    /**
+     * Сохранить новое объявление
+     * @param newAds новое объявление
+     * @param image картинка объявления
+     * @return ДТО объявления
+     */
     public Ads saveNewAd(CreateAds newAds, MultipartFile image) {
         AdsEntity adsEntity = AdsMapper.INSTANCE.createAdsToAdsEntity(newAds);
-        //раскомментировать когда заработает нормальная авторизация
-        adsEntity.setAuthor(userService.getUserEntity(myUserDetails.getUsername())); // чуть переделал авторизацию
-//        adsEntity.setAuthor(userService.getUserEntity("user@gmail.com"));
+        adsEntity.setAuthor(userService.getUserEntity(myUserDetails.getUsername()));
         adsEntity.setCreatedAt(LocalDateTime.now());
         adsRepository.save(adsEntity);
         try {
@@ -72,12 +79,16 @@ public class AdsService {
         } catch (IOException e) {
             e.printStackTrace();
         }
-
         Ads ads = AdsMapper.INSTANCE.adsEntityToAds(adsEntity, adsEntity.getAuthor());
         ads.setImage("/ads/image/" + adsImageService.findByAdsId(adsEntity.getId()).getId());
         return ads;
     }
 
+    /**
+     * Вернуть полное объявление по id
+     * @param id
+     * @return ДТО полного объявления
+     */
     public FullAds findFullAdsById(int id) {
         AdsEntity adsEntity = adsRepository.findById(id).orElseThrow();
         FullAds fullAds = AdsMapper.INSTANCE.adsEntityToFullAds(adsEntity, adsEntity.getAuthor());
@@ -87,11 +98,20 @@ public class AdsService {
         return fullAds;
     }
 
+    /***
+     * Вернуть полное объявление не в ДТО
+     * @param id
+     * @return внутренняя сущность объявления
+     */
     public AdsEntity findById(int id) {
         return adsRepository.findById(id).orElseThrow();
     }
 
-
+    /**
+     * Удалить объявление
+     * @param id
+     * @return
+     */
     public boolean delete(int id) {
 //        Таким образом проверять что это владелец обьявления или админ
         if (isChoiceRole(id)) {
@@ -102,20 +122,26 @@ public class AdsService {
         return false;
     }
 
+    /**
+     * Обновить объявление
+     * @param id объявления
+     * @param createAds новое объявление
+     * @return ДТО объявления
+     */
     public Ads updateAds(int id, CreateAds createAds) {
         AdsEntity adsEntity = adsRepository.findById(id).orElseThrow();
-
-        if (isChoiceRole(id)) {
-            AdsEntity newAdsEntity = AdsMapper.INSTANCE.createAdsToAdsEntity(createAds);
-            adsEntity.setDescription(newAdsEntity.getDescription());
-            adsEntity.setTitle(newAdsEntity.getTitle());
-            adsEntity.setPrice(newAdsEntity.getPrice());
-            return AdsMapper.INSTANCE.adsEntityToAds(adsRepository.save(adsEntity), adsEntity.getAuthor());
-        }
-        return null; // тут надо вернуть 403 , дима написал
+        AdsEntity newAdsEntity = AdsMapper.INSTANCE.createAdsToAdsEntity(createAds);
+        adsEntity.setDescription(newAdsEntity.getDescription());
+        adsEntity.setTitle(newAdsEntity.getTitle());
+        adsEntity.setPrice(newAdsEntity.getPrice());
+        return AdsMapper.INSTANCE.adsEntityToAds(adsRepository.save(adsEntity), adsEntity.getAuthor());
     }
 
-
+    /**
+     * Служебный метод для маппинга коллекции внутренних сущностей в ДТО
+     * @param adsEntityCollection
+     * @return
+     */
     private Collection<Ads> adsEntityCollectionToAdsCollection(Collection<AdsEntity> adsEntityCollection) {
         return adsEntityCollection.stream().map(adsEntity -> {
                     Ads ads = AdsMapper.INSTANCE.adsEntityToAds(adsEntity, adsEntity.getAuthor());
@@ -128,7 +154,12 @@ public class AdsService {
         ).collect(Collectors.toList());
     }
 
-    private boolean isChoiceRole(int id) {
+    /**
+     * Проверка принадлежности объявления авторизованному пользователю
+     * @param id
+     * @return
+     */
+    public boolean isChoiceRole(int id) {
         return (myUserDetails.getUsername().equals(adsRepository.findById(id).orElseThrow().getAuthor().getUsername())
                 || myUserDetails.getAuthorities().stream().map(Object::toString).collect(Collectors.toList()).contains("ROLE_ADMIN"));
     }

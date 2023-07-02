@@ -4,19 +4,14 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
-import ru.skypro.homework.dto.CreateAds;
 import ru.skypro.homework.entity.AdsEntity;
 import ru.skypro.homework.entity.AdsImage;
 import ru.skypro.homework.repositories.AdsImageRepository;
 
-import javax.imageio.ImageIO;
-import java.awt.image.BufferedImage;
 import java.io.*;
-import java.net.URL;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.ArrayList;
-import java.util.NoSuchElementException;
 import java.util.Objects;
 
 import static java.nio.file.StandardOpenOption.CREATE_NEW;
@@ -32,6 +27,13 @@ public class AdsImageService {
         this.adsImageRepository = adsImageRepository;
     }
 
+    /**
+     * Сохранить новую картинку для объявления
+     * @param adsEntity сущность объявления
+     * @param image
+     * @return Сущность картинки объявления
+     * @throws IOException
+     */
     @Transactional
     public AdsImage save(AdsEntity adsEntity, MultipartFile image) throws IOException {
         Path filePath = Path.of(adsImageDir, Math.random() + "." + Objects.requireNonNull(image.getOriginalFilename()));
@@ -39,16 +41,27 @@ public class AdsImageService {
         Files.deleteIfExists(filePath);
 
         AdsImage adsImage = saveToFolder(filePath, image);
-
         adsImage.setAds(adsEntity);
 
         return adsImageRepository.save(adsImage);
     }
+
+    /**
+     * Вернуть сущность картинки по id объявления
+     * @param adsId
+     * @return
+     */
     @Transactional
     public AdsImage findByAdsId(int adsId) {
         return adsImageRepository.findAdsImagesByAds_Id(adsId);
     }
 
+    /**
+     * Веруть саму картинку из файловой системы
+     * @param id
+     * @return
+     * @throws IOException
+     */
     @Transactional(readOnly = true)
     public byte[] getAdsImage(int id) throws IOException {
         AdsImage adsImage;
@@ -75,6 +88,12 @@ public class AdsImageService {
         return data;
     }
 
+    /**
+     * Обновить картинку объявления
+     * @param id
+     * @param image
+     * @return
+     */
     @Transactional
     public ArrayList<String> updateCover(int id, MultipartFile image) {
         AdsImage adsImage;
@@ -88,13 +107,11 @@ public class AdsImageService {
             } catch (IOException e) {
                 e.printStackTrace();
             }
-
         } else {
             adsImage = adsImageRepository.findById(id).get();
         }
         try {
             AdsImage newAdsImage = saveToFolder(Path.of(adsImageDir, Math.random() + "." + Objects.requireNonNull(image.getOriginalFilename())), image);
-            //adsImage.setData(newAdsImage.getData());
             adsImage.setContentType(newAdsImage.getContentType());
             adsImage.setFileSize(newAdsImage.getFileSize());
             adsImage.setFilePath(newAdsImage.getFilePath());
@@ -107,11 +124,22 @@ public class AdsImageService {
         return stringArrayList;
     }
 
+    /**
+     * Удалить картинку по id
+     * @param adsId
+     */
     @Transactional
     public void deleteByAdsId(int adsId) {
         adsImageRepository.deleteAdsImagesByAds_Id(adsId);
     }
 
+    /**
+     * Служебный метод для сохранения картинки в файловую систему
+     * @param filePath
+     * @param image
+     * @return
+     * @throws IOException
+     */
     private AdsImage saveToFolder(Path filePath, MultipartFile image) throws IOException {
         try (
                 InputStream is = image.getInputStream();
@@ -126,7 +154,6 @@ public class AdsImageService {
         adsImage.setFilePath(filePath.toString());
         adsImage.setFileSize(image.getSize());
         adsImage.setContentType(image.getContentType());
-        //adsImage.setData(image.getBytes());
         return  adsImage;
     }
 }
