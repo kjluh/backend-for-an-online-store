@@ -33,6 +33,11 @@ public class CommentService {
         this.myUserDetails = myUserDetails;
     }
 
+    /**
+     * Вернуть все комментарии выбранного объявления
+     * @param adId уникальный ID объявления
+     * @return ДТО обертка для коллекции комментариев
+     */
     @Transactional(readOnly = true)
     public ResponseWrapperComment getAllCommentsByAdsId(int adId) {
         List<CommentEntity> commentEntityList = new ArrayList<>();
@@ -58,6 +63,12 @@ public class CommentService {
         return responseWrapperComment;
     }
 
+    /**
+     * Сохранить новый комментарий к объявлению
+     * @param adId уникальный ID объявления
+     * @param commentText текст комментария
+     * @return ДТО комментария
+     */
     @Transactional
     public Comment createNewAdsComment(int adId, CreateComment commentText) {
         CommentEntity commentEntity = new CommentEntity();
@@ -72,6 +83,12 @@ public class CommentService {
         return newComment;
     }
 
+    /**
+     * Удалить комментарий у объявления
+     * @param adId уникальный ID объявления
+     * @param id уникальный ID комментария
+     * @return ДТО комментария
+     */
     @Transactional
     public boolean deleteCommentByAdsIdAndCommentEntityId(int adId, int id) {
         if (isChoiceRole(id)) {
@@ -81,6 +98,13 @@ public class CommentService {
         return false;
     }
 
+    /**
+     * Обновить комментарий у объявления
+     * @param adId уникальный ID объявления
+     * @param id уникальный ID комментария
+     * @param comment новый комментарий
+     * @return ДТО комментария
+     */
     @Transactional
     public Comment patchCommentByAdsIdAndCommentEntityId(int adId, int id, Comment comment) {
         if (isChoiceRole(id)) {
@@ -98,6 +122,11 @@ public class CommentService {
         return null;
     }
 
+    /**
+     * Проверка принадлежности объявления авторизованному пользователю
+     * @param id
+     * @return
+     */
     private boolean isChoiceRole(int id) {
         return (myUserDetails.getUsername().equals(commentRepository.findById(id).orElseThrow().getAuthor().getUsername())
                 || myUserDetails.getAuthorities().stream().map(Object::toString).collect(Collectors.toList()).contains("ROLE_ADMIN"));
