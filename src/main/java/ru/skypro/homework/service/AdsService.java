@@ -115,9 +115,13 @@ public class AdsService {
     public boolean delete(int id) {
 //        Таким образом проверять что это владелец обьявления или админ
         if (isChoiceRole(id)) {
-            adsImageService.deleteByAdsId(id);
-            adsRepository.deleteById(id);
-            return true;
+            try {
+                adsImageService.deleteByAdsId(id);
+                adsRepository.deleteById(id);
+                return true;
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
         }
         return false;
     }
