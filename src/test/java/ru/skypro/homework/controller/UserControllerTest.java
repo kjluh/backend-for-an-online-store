@@ -11,14 +11,16 @@ import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMock
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.MediaType;
 import org.springframework.security.core.Authentication;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.test.web.servlet.MockMvc;
-import org.springframework.web.bind.annotation.CrossOrigin;
 
-import static org.mockito.Mockito.when;
+import java.nio.charset.StandardCharsets;
+import java.util.Base64;
+
+import static org.springframework.test.web.client.match.MockRestRequestMatchers.header;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @SpringBootTest
@@ -29,7 +31,6 @@ public class UserControllerTest {
 
     @Autowired
     private MockMvc mockMvc;
-
     private JSONObject testUserDTOJSON = new JSONObject();
     private JSONObject testLoginJSON = new JSONObject();
 
@@ -45,7 +46,6 @@ public class UserControllerTest {
         testLoginJSON.put("password", "password");
         testLoginJSON.put("username", "username");
     }
-
     @Test
     void testReg() throws Exception {
         mockMvc.perform(
@@ -54,30 +54,19 @@ public class UserControllerTest {
         mockMvc.perform(
                         post("/login").contentType(MediaType.APPLICATION_JSON).content(testLoginJSON.toString()))
                 .andExpect(status().isOk());
-
     }
-
     @Test
     void testGetUser() throws Exception {
-
+        mockMvc.perform(
+                        post("/register").contentType(MediaType.APPLICATION_JSON).content(testUserDTOJSON.toString()))
+                .andExpect(status().isOk());
         mockMvc.perform(
                         post("/login").contentType(MediaType.APPLICATION_JSON).content(testLoginJSON.toString()))
                 .andExpect(status().isOk());
         mockMvc.perform(
-                        get("/users/me").contentType(MediaType.APPLICATION_JSON))
-                .andExpect(status().isOk())
-                .andExpect(jsonPath("username").value("username"));
-//        mockMvc.perform(
-//                        post("/pet  s").contentType(MediaType.APPLICATION_JSON).content(testJSONObject.toString()))
-//                .andExpect(status().isOk());
-//        mockMvc.perform(
-//                        get("/pets"))
-//                .andExpect(status().isOk())
-//                .andExpect(jsonPath("$.size()").value(1))
-//                .andExpect(jsonPath("$[0].name").value("testPet"))
-//                .andExpect(jsonPath("$[0].id").value("1"))
-//                .andExpect(jsonPath("$[0].type").value("test"))
-//                .andExpect(jsonPath("$[0].age").value("11"))
-//                .andExpect(jsonPath("$[0].description").value("description"));
+                get("/users/me")
+                        .header("Authorization", "Basic " +
+                        Base64.getEncoder().encodeToString(("username" + ":" + "password").getBytes(StandardCharsets.UTF_8))))
+                .andExpect(status().isOk());
     }
 }

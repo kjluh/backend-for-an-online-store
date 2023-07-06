@@ -127,7 +127,7 @@ public class CommentService {
      * @param id
      * @return
      */
-    private boolean isChoiceRole(int id) {
+    public boolean isChoiceRole(int id) {
         return (myUserDetails.getUsername().equals(commentRepository.findById(id).orElseThrow().getAuthor().getUsername())
                 || myUserDetails.getAuthorities().stream().map(Object::toString).collect(Collectors.toList()).contains("ROLE_ADMIN"));
     }

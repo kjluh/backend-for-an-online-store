@@ -91,12 +91,13 @@ public class UserService {
      * @param image    Мультипад файл картинка новой аватарки
      * @throws IOException
      */
-    @Transactional // необходимо писать если вызываем сущность из бд с картинкой в параметрах с анат @lob
+    @Transactional // необходимо писать если вызываем сущность из бд с картинкой в параметрах с анатацией @lob
     public void updateAvatar(MultipartFile image) throws IOException {
         UserEntity userEntity = getUserEntity(myUserDetails.getUsername());
 
         //сохранение на сервак с именем пользователя
-        Path filePath = Path.of(userAvatarsDir, myUserDetails.getUsername() + "." + image.getOriginalFilename().substring(image.getOriginalFilename().lastIndexOf(".") + 1));
+        Path filePath = Path.of(userAvatarsDir, myUserDetails.getUsername() + "." + image.getOriginalFilename()
+                .substring(image.getOriginalFilename().lastIndexOf(".") + 1));
         Files.createDirectories(filePath.getParent());
         Files.deleteIfExists(filePath);
         try (InputStream is = image.getInputStream();
@@ -114,8 +115,6 @@ public class UserService {
         avatarUserEntityRepository.save(avatar);
         userEntity.setAvatarUserEntity(avatar);
         userEntityRepository.save(userEntity);
-        int[] x = new  int[]{1,2};
-
     }
 
     /**
