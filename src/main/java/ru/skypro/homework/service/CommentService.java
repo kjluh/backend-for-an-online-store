@@ -108,15 +108,12 @@ public class CommentService {
     @Transactional
     public Comment patchCommentByAdsIdAndCommentEntityId(int adId, int id, Comment comment) {
         if (isChoiceRole(id)) {
-            comment.setPk(id);
+            CommentEntity commentEntityTest = commentRepository.findById(id).orElseThrow();
             comment.setCreatedAt(LocalDateTime.now(ZoneOffset.UTC).toInstant(ZoneOffset.UTC).toEpochMilli());
-            comment.setAuthor(userService.getUserEntity(myUserDetails.getUsername()).getId());
-            comment.setAuthorFirstName(userService.getUserEntity(myUserDetails.getUsername()).getFirstName());
-            comment.setAuthorImage("/users/avatar/" + userService.getUserEntity(myUserDetails.getUsername()).getId() + "/db");
-            CommentEntity commentEntity = CommentMapper.INSTANCE.commentToCommentEntity(comment);
-            commentEntity.setCreateTime(Instant.ofEpochMilli(comment.getCreatedAt()).atZone(ZoneOffset.UTC).toLocalDateTime());
-            commentEntity.setAdsEntity(adsService.findById(adId));
-            commentRepository.save(commentEntity);
+            commentEntityTest.setCreateTime(Instant.ofEpochMilli(comment.getCreatedAt()).atZone(ZoneOffset.UTC).toLocalDateTime());
+            commentEntityTest.setAdsEntity(adsService.findById(adId));
+            commentEntityTest.setCommentText(comment.getText());
+            commentRepository.save(commentEntityTest);
             return comment;
         }
         return null;
