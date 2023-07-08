@@ -1,5 +1,7 @@
 package ru.skypro.homework.service;
 
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import ru.skypro.homework.dto.Comment;
@@ -22,14 +24,15 @@ public class CommentService {
 
     private final CommentRepository commentRepository;
     private final UserService userService;
-    private final AdsService adsService;
+    @Lazy
+    @Autowired
+    private AdsService adsService;
     private final MyUserDetails myUserDetails; // спринг секьюрити сюда положит авторизированного пользователя
 
 
-    public CommentService(CommentRepository commentsForAdsRepository, UserService userService, AdsService adsService, MyUserDetails myUserDetails) {
+    public CommentService(CommentRepository commentsForAdsRepository, UserService userService, MyUserDetails myUserDetails) {
         this.commentRepository = commentsForAdsRepository;
         this.userService = userService;
-        this.adsService = adsService;
         this.myUserDetails = myUserDetails;
     }
 
@@ -96,6 +99,15 @@ public class CommentService {
             return true;
         }
         return false;
+    }
+
+    /**
+     * Удалить все комментарии у объявления
+     * @param adId уникальный ID объявления
+     */
+    @Transactional
+    public void deleteAllCommentsByAdsId (int adId) {
+        commentRepository.deleteAllByAdsEntity_Id(adId);
     }
 
     /**

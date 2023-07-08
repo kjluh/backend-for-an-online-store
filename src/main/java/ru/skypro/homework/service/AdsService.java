@@ -1,5 +1,7 @@
 package ru.skypro.homework.service;
 
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 import ru.skypro.homework.dto.Ads;
@@ -22,6 +24,9 @@ public class AdsService {
 
     final private AdsRepository adsRepository;
     final private AdsImageService adsImageService;
+    @Lazy
+    @Autowired
+    private CommentService commentService;
     final private UserService userService;
     private final MyUserDetails myUserDetails; // спринг секьюрити сюда положит авторизированного пользователя
 
@@ -117,6 +122,7 @@ public class AdsService {
         if (isChoiceRole(id)) {
             try {
                 adsImageService.deleteByAdsId(id);
+                commentService.deleteAllCommentsByAdsId(id);
                 adsRepository.deleteById(id);
                 return true;
             } catch (IOException e) {

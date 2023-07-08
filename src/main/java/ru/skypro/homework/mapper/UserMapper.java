@@ -20,7 +20,7 @@ public interface UserMapper {
      * @param user из ДТО
      * @param entity в сущность
      */
-    @Mapping(ignore = true, target = "user.id")
+    @Mapping(ignore = true, target = "entity.id")
     void toEntity( User user,@MappingTarget UserEntity entity);
 
     /**
