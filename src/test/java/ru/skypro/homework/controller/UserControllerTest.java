@@ -34,8 +34,8 @@ public class UserControllerTest {
     private JSONObject testUserDTOJSON = new JSONObject();
     private JSONObject testLoginJSON = new JSONObject();
 
-    @BeforeEach
-    void setUp() throws JSONException {
+
+   private void setTestUserDTOJSON() throws JSONException {
         testUserDTOJSON.put("username", "username");
         testUserDTOJSON.put("password", "password");
         testUserDTOJSON.put("firstName", "firstName");
@@ -43,11 +43,15 @@ public class UserControllerTest {
         testUserDTOJSON.put("phone", "+79998887766");
         testUserDTOJSON.put("role", "ADMIN");
 
+    }
+    private void setTestLoginJSON() throws JSONException {
         testLoginJSON.put("password", "password");
         testLoginJSON.put("username", "username");
     }
     @Test
     void testReg() throws Exception {
+        setTestUserDTOJSON();
+        setTestLoginJSON();
         mockMvc.perform(
                         post("/register").contentType(MediaType.APPLICATION_JSON).content(testUserDTOJSON.toString()))
                 .andExpect(status().isOk());
@@ -56,10 +60,15 @@ public class UserControllerTest {
                 .andExpect(status().isOk());
     }
     @Test
-    void testGetUser() throws Exception {
+    void testRegTrow() throws Exception {
+        setTestUserDTOJSON();
         mockMvc.perform(
                         post("/register").contentType(MediaType.APPLICATION_JSON).content(testUserDTOJSON.toString()))
-                .andExpect(status().isOk());
+                .andExpect(status().is(400));
+    }
+    @Test
+    void testGetUser() throws Exception {
+        setTestLoginJSON();
         mockMvc.perform(
                         post("/login").contentType(MediaType.APPLICATION_JSON).content(testLoginJSON.toString()))
                 .andExpect(status().isOk());
@@ -67,6 +76,21 @@ public class UserControllerTest {
                 get("/users/me")
                         .header("Authorization", "Basic " +
                         Base64.getEncoder().encodeToString(("username" + ":" + "password").getBytes(StandardCharsets.UTF_8))))
+                .andExpect(status().isOk());
+    }
+
+    @Test
+    void testUpdateUser() throws Exception {
+        setTestLoginJSON();
+        JSONObject testUserUpdateDTOJSON = new JSONObject();
+        testUserUpdateDTOJSON.put("firstName", "firstName");
+        testUserUpdateDTOJSON.put("lastName", "lastName");
+        testUserUpdateDTOJSON.put("phone", "+79998887766");
+        mockMvc.perform(
+                        post("/login").contentType(MediaType.APPLICATION_JSON).content(testLoginJSON.toString()))
+                .andExpect(status().isOk());
+        mockMvc.perform(
+                        patch("/users/me").contentType(MediaType.APPLICATION_JSON).content(testUserUpdateDTOJSON.toString()))
                 .andExpect(status().isOk());
     }
 }
