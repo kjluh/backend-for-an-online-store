@@ -10,13 +10,17 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.MediaType;
+import org.springframework.mock.web.MockMultipartFile;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.test.web.servlet.MockMvc;
+import org.springframework.test.web.servlet.setup.MockMvcBuilders;
+import org.springframework.web.context.WebApplicationContext;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.io.File;
 import java.nio.charset.StandardCharsets;
 import java.util.Base64;
 
@@ -34,9 +38,11 @@ public class UserControllerTest {
     private MockMvc mockMvc;
     private JSONObject testUserDTOJSON = new JSONObject();
     private JSONObject testLoginJSON = new JSONObject();
+    @Autowired
+    private WebApplicationContext webApplicationContext;
 
 
-   private void setTestUserDTOJSON() throws JSONException {
+    private void setTestUserDTOJSON() throws JSONException {
         testUserDTOJSON.put("username", "username");
         testUserDTOJSON.put("password", "password");
         testUserDTOJSON.put("firstName", "firstName");
@@ -45,10 +51,12 @@ public class UserControllerTest {
         testUserDTOJSON.put("role", "ADMIN");
 
     }
+
     private void setTestLoginJSON() throws JSONException {
         testLoginJSON.put("password", "password");
         testLoginJSON.put("username", "username");
     }
+
     @Test
     void testReg() throws Exception {
         setTestUserDTOJSON();
@@ -60,6 +68,7 @@ public class UserControllerTest {
                         post("/login").contentType(MediaType.APPLICATION_JSON).content(testLoginJSON.toString()))
                 .andExpect(status().isOk());
     }
+
     @Test
     void testRegTrow() throws Exception {
         setTestUserDTOJSON();
@@ -67,6 +76,7 @@ public class UserControllerTest {
                         post("/register").contentType(MediaType.APPLICATION_JSON).content(testUserDTOJSON.toString()))
                 .andExpect(status().is(400));
     }
+
     @Test
     void testGetUser() throws Exception {
         setTestLoginJSON();
@@ -74,11 +84,12 @@ public class UserControllerTest {
                         post("/login").contentType(MediaType.APPLICATION_JSON).content(testLoginJSON.toString()))
                 .andExpect(status().isOk());
         mockMvc.perform(
-                get("/users/me")
-                        .header("Authorization", "Basic " +
-                        Base64.getEncoder().encodeToString(("username" + ":" + "password").getBytes(StandardCharsets.UTF_8))))
+                        get("/users/me")
+                                .header("Authorization", "Basic " +
+                                        Base64.getEncoder().encodeToString(("username" + ":" + "password").getBytes(StandardCharsets.UTF_8))))
                 .andExpect(status().isOk());
     }
+
     @Test
     void testUpdateUser() throws Exception {
         setTestLoginJSON();
@@ -91,10 +102,11 @@ public class UserControllerTest {
                 .andExpect(status().isOk());
         mockMvc.perform(
                         patch("/users/me").contentType(MediaType.APPLICATION_JSON).content(testUserUpdateDTOJSON.toString())
-                .header("Authorization", "Basic " +
-                        Base64.getEncoder().encodeToString(("username" + ":" + "password").getBytes(StandardCharsets.UTF_8))))
+                                .header("Authorization", "Basic " +
+                                        Base64.getEncoder().encodeToString(("username" + ":" + "password").getBytes(StandardCharsets.UTF_8))))
                 .andExpect(status().isOk());
     }
+
     @Test
     void testUpdateUserPassword() throws Exception {
         setTestLoginJSON();
@@ -115,16 +127,20 @@ public class UserControllerTest {
                                         Base64.getEncoder().encodeToString(("username" + ":" + "password111").getBytes(StandardCharsets.UTF_8))))
                 .andExpect(status().isOk());
     }
+
     @Test
     void testLoadAvatar() throws Exception {
         setTestLoginJSON();
-        MultipartFile image = new Object();
+        MockMultipartFile file = new MockMultipartFile("file", "hello.png", MediaType.IMAGE_PNG_VALUE, "Hello, World!".getBytes());
 
         mockMvc.perform(
                         post("/login").contentType(MediaType.APPLICATION_JSON).content(testLoginJSON.toString()))
                 .andExpect(status().isOk());
-        mockMvc.perform(
-                patch("/users/me/image").contentType(MediaType.MULTIPART_FORM_DATA_VALUE).content(image.getBytes())
-        )
+
+        MockMvc mockMvc = MockMvcBuilders.webAppContextSetup(webApplicationContext).build();
+        mockMvc.perform(multipart("/users/me/image").file(file)
+                        .header("Authorization", "Basic " +
+                                Base64.getEncoder().encodeToString(("username" + ":" + "password").getBytes(StandardCharsets.UTF_8))))
+                .andExpect(status().isOk());
     }
 }
