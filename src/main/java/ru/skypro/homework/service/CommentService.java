@@ -99,6 +99,14 @@ public class CommentService {
     }
 
     /**
+     * Удалить все комментарии у объявления
+     * @param adId уникальный ID объявления
+     */
+    public void deleteAllCommentsByAdsId (int adId) {
+        commentRepository.deleteAllByAdsEntity_Id(adId);
+    }
+
+    /**
      * Обновить комментарий у объявления
      * @param adId уникальный ID объявления
      * @param id уникальный ID комментария
