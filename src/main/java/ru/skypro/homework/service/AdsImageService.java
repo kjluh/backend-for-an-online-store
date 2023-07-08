@@ -129,7 +129,9 @@ public class AdsImageService {
      * @param adsId
      */
     @Transactional
-    public void deleteByAdsId(int adsId) {
+    public void deleteByAdsId(int adsId) throws IOException {
+        Path filePath = Path.of(adsImageRepository.findAdsImagesByAds_Id(adsId).getFilePath());
+        Files.deleteIfExists(filePath);
         adsImageRepository.deleteAdsImagesByAds_Id(adsId);
     }
 
