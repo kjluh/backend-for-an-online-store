@@ -48,7 +48,7 @@ public class WebSecurityConfig {
 //                .sessionManagement(configurer -> configurer.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .cors()
                 .and()
-                .sessionManagement(configurer -> configurer.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
+                .sessionManagement(configurer -> configurer.sessionCreationPolicy(SessionCreationPolicy.STATELESS))// для запросов с разных утройств ччерез одного пользовател
                 .httpBasic(withDefaults());
         return http.build();
     }

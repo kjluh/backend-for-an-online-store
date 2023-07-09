@@ -23,6 +23,7 @@ import org.springframework.web.multipart.MultipartFile;
 import java.io.File;
 import java.nio.charset.StandardCharsets;
 import java.util.Base64;
+import java.util.Objects;
 
 import static org.springframework.test.web.client.match.MockRestRequestMatchers.header;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
@@ -115,9 +116,9 @@ public class UserControllerTest {
     void testLoadAvatar() throws Exception {
         MockMultipartFile image = new MockMultipartFile("image", "hello.png", MediaType.IMAGE_PNG_VALUE, "Hello, World!".getBytes());
 
-        mockMvc = MockMvcBuilders.webAppContextSetup(webApplicationContext).build();
+//        mockMvc = MockMvcBuilders.webAppContextSetup(webApplicationContext).build();
         mockMvc.perform(
-                        multipart("/users/me/image").file(image)
+                        patch("/users/me/image").contentType(MediaType.IMAGE_PNG).content(Objects.requireNonNull(image.getContentType()))
                                 .header("Authorization", "Basic " +
                                         Base64.getEncoder().encodeToString(("username" + ":" + "password").getBytes(StandardCharsets.UTF_8))))
                 .andExpect(status().isOk());
