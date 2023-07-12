@@ -44,7 +44,7 @@ public class UserController {
         return ResponseEntity.ok(userService.updateUser(user));
     }
 
-    @PatchMapping(value = "/me/image", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+    @PostMapping(value = "/me/image", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     public ResponseEntity updateAvatar(@RequestParam MultipartFile image) throws IOException {
         userService.updateAvatar(image);
         return ResponseEntity.ok().build();

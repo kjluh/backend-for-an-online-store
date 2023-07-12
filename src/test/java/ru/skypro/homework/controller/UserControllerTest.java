@@ -2,31 +2,22 @@ package ru.skypro.homework.controller;
 
 import org.json.JSONException;
 import org.json.JSONObject;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
-import org.mockito.Mock;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.http.HttpMethod;
 import org.springframework.http.MediaType;
 import org.springframework.mock.web.MockMultipartFile;
-import org.springframework.security.core.Authentication;
-import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.test.web.servlet.MockMvc;
-import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.web.context.WebApplicationContext;
-import org.springframework.web.multipart.MultipartFile;
-
-import java.io.File;
 import java.nio.charset.StandardCharsets;
 import java.util.Base64;
-import java.util.Objects;
-
-import static org.springframework.test.web.client.match.MockRestRequestMatchers.header;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @SpringBootTest
@@ -38,9 +29,6 @@ public class UserControllerTest {
     @Autowired
     private MockMvc mockMvc;
     private JSONObject testUserDTOJSON = new JSONObject();
-    @Autowired
-    private WebApplicationContext webApplicationContext;
-
 
     private void setTestUserDTOJSON() throws JSONException {
         testUserDTOJSON.put("username", "username");
@@ -79,7 +67,8 @@ public class UserControllerTest {
                         get("/users/me")
                                 .header("Authorization", "Basic " +
                                         Base64.getEncoder().encodeToString(("username" + ":" + "password").getBytes(StandardCharsets.UTF_8))))
-                .andExpect(status().isOk());
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.firstName").value("firstName"));
     }
 
     @Test
@@ -114,13 +103,14 @@ public class UserControllerTest {
 
     @Test
     void testLoadAvatar() throws Exception {
+
         MockMultipartFile image = new MockMultipartFile("image", "hello.png", MediaType.IMAGE_PNG_VALUE, "Hello, World!".getBytes());
 
-//        mockMvc = MockMvcBuilders.webAppContextSetup(webApplicationContext).build();
         mockMvc.perform(
-                        patch("/users/me/image").contentType(MediaType.IMAGE_PNG).content(Objects.requireNonNull(image.getContentType()))
-                                .header("Authorization", "Basic " +
-                                        Base64.getEncoder().encodeToString(("username" + ":" + "password").getBytes(StandardCharsets.UTF_8))))
+                multipart(HttpMethod.PATCH,"/users/me/image").file(image)
+                        .header("Authorization", "Basic " +
+                                        Base64.getEncoder().encodeToString(("username" + ":" + "password")
+                                                .getBytes(StandardCharsets.UTF_8))))
                 .andExpect(status().isOk());
     }
 //    @Test
