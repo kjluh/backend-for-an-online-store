@@ -83,6 +83,9 @@ public class CommentService {
 
         Comment newComment = CommentMapper.INSTANCE.commentEntityToComment(commentEntity);
         newComment.setCreatedAt(commentEntity.getCreateTime().toInstant(ZoneOffset.UTC).toEpochMilli());
+        if (commentEntity.getAuthor().getAvatarUserEntity() != null) {
+            newComment.setAuthorImage("/users/avatar/" + userService.getUserEntity(commentEntity.getAuthor().getUsername()).getId() + "/db");
+        }
         return newComment;
     }
 
