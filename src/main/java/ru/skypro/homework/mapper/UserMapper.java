@@ -10,7 +10,7 @@ import ru.skypro.homework.dto.UserSecurity;
 import ru.skypro.homework.entity.UserEntity;
 import ru.skypro.homework.dto.User;
 
-@Mapper(componentModel = "spring")
+//@Mapper(componentModel = "spring")
 public interface UserMapper {
 
     UserMapper INSTANCE = Mappers.getMapper(UserMapper.class);
